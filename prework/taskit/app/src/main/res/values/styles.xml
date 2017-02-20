@@ -1,0 +1,30 @@
+<resources>
+    <!-- Define your colors in `res/values/colors.xml` -->
+    <color name="simple_yellow">#ECD078</color>
+    <color name="primary_blue">#66a1ef</color>
+
+    <!-- Base application theme. -->
+    <style name="ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryDark">@color/primary_blue</item>
+        <item name="listPreferredItemHeight">40dp</item>
+        <item name="android:homeAsUpIndicator">@drawable/back_arrow</item>
+    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryDark">@color/primary_blue</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="listPreferredItemHeight">50dp</item>
+        <item name="android:textColor">@color/task</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+</resources>

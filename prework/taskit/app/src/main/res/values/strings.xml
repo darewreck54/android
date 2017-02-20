@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Task it!</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+
+    <string name="add_item">Add a new item...</string>
+    <string name="edit_item_text_box">Edit Item Below</string>
+    <string name="save">save</string>
+    <string name="taskName_lbl">Task Name</string>
+    <string name="task_status">Status</string>
+    <string name="task_priority">Priority</string>
+    <string name="task_due_date">Due Date</string>
+    <string name="task_notes">Task Notes</string>
+
+    <string-array name="task_status_values">
+        <item>Not Complete</item>
+        <item>Pending</item>
+        <item>Complete</item>
+    </string-array>
+
+    <string-array name="task_priority_values">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+</resources>

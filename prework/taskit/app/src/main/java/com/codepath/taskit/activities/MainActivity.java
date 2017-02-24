@@ -1,6 +1,7 @@
 package com.codepath.taskit.activities;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import com.codepath.taskit.R;
 import com.codepath.taskit.adapters.ITaskDbAdapter;
 import com.codepath.taskit.adapters.TaskDbFlowAdapter;
 import com.codepath.taskit.data.dbflow.Task;
+import com.codepath.taskit.fragments.EditTaskDialogFragment;
 import com.codepath.taskit.types.ActionEnum;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
+    private void showNewTaskDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        EditTaskDialogFragment fragment = EditTaskDialogFragment.newInstance("some title");
+        fragment.show(fm, "test");
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.task_menu, menu);
@@ -70,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_add_task:
                 // User chose the "Settings" item, show the app settings UI...
-                Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                startActivityForResult (intent, ADD_TASK_REQUEST_CODE);
+                //Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
+                //startActivityForResult (intent, ADD_TASK_REQUEST_CODE);
+                showNewTaskDialog();
+
                 return true;
             default:
                 // If we got here, the user's action was not recognized.

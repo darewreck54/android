@@ -34,10 +34,8 @@ public class NewTaskDialogFragment extends DialogFragment {
         void onFinishNewTaskDialog(Task task);
     }
 
-    public static NewTaskDialogFragment newInstance(String param1) {
+    public static NewTaskDialogFragment newInstance() {
         NewTaskDialogFragment fragment = new NewTaskDialogFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 

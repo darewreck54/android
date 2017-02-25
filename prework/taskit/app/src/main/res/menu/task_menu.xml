@@ -7,5 +7,9 @@
         android:icon="@drawable/plus"
         android:title="@string/add"
         app:showAsAction="ifRoom"/>
-
+    <item
+        android:id="@+id/action_send_task"
+        android:icon="@drawable/send"
+        android:title="email"
+        app:showAsAction="ifRoom"/>
 </menu>

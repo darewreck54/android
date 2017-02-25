@@ -21,6 +21,7 @@ import com.codepath.taskit.adapters.TaskDbFlowAdapter;
 import com.codepath.taskit.data.dbflow.Task;
 import com.codepath.taskit.fragments.EditTaskDialogFragment;
 import com.codepath.taskit.fragments.NewTaskDialogFragment;
+import com.codepath.taskit.fragments.SendEmailTaskDialogFragment;
 import com.codepath.taskit.fragments.ViewTaskDialogFragment;
 import com.codepath.taskit.types.ActionEnum;
 import com.raizlabs.android.dbflow.config.FlowConfig;
@@ -64,17 +65,26 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_add_task:
+            case R.id.action_add_task: {
                 showNewTaskDialog();
                 return true;
+            }
+            case R.id.action_send_task: {
+                showSendEmailTaskDialog();
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    private void showSendEmailTaskDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        SendEmailTaskDialogFragment fragment = SendEmailTaskDialogFragment.newInstance(this.tasks);
+        fragment.show(fm, "test");
+    }
     private void showNewTaskDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        NewTaskDialogFragment fragment = NewTaskDialogFragment.newInstance("some title");
+        NewTaskDialogFragment fragment = NewTaskDialogFragment.newInstance();
         fragment.show(fm, "test");
     }
 

@@ -27,12 +27,21 @@ The following **additional** features are implemented:
 
 * [] List anything else that you can get done to improve the app functionality!
 * [x] Splash Screen!
+* [x] version 2 uses dialog fragments
+* [x] version 3 supports email the list of task if the android has an email app installed. (sending intent to other apps).  Ran out of time to do the styling of it
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
+Version 1: Activity 
+<img src='https://github.com/darewreck54/android/blob/master/prework/taskit/gif/taskIt_v1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+Version 2: Dialog Fragments
 <img src='https://github.com/darewreck54/android/blob/master/prework/taskit/gif/taskIt_v2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+Version 3: Email
+<img src='https://github.com/darewreck54/android/blob/master/prework/taskit/gif/taskIt_v3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

@@ -6,6 +6,6 @@
         android:id="@+id/action_add_task"
         android:icon="@drawable/plus"
         android:title="@string/add"
-        app:showAsAction="ifRoom"/>/>
+        app:showAsAction="ifRoom"/>
 
 </menu>

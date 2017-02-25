@@ -3,6 +3,7 @@ package com.codepath.taskit.fragments;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.codepath.taskit.R;
 import com.codepath.taskit.data.dbflow.Task;
@@ -24,22 +26,23 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link EditTaskDialogFragment.EditTaskDialogListener} interface
+ * {@link ViewTaskDialogFragment.ViewTaskDialogListener} interface
  * to handle interaction events.
- * Use the {@link EditTaskDialogFragment#newInstance} factory method to
+ * Use the {@link ViewTaskDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditTaskDialogFragment extends DialogFragment {
+public class ViewTaskDialogFragment extends DialogFragment {
 
-    public EditTaskDialogFragment() {
+    public ViewTaskDialogFragment() {
     }
 
-    public interface EditTaskDialogListener {
-        void saveTask(Task task, int position);
+    public interface ViewTaskDialogListener {
+        void editTask(Task task, int position);
+        void deleteTask(Task task, int position);
     }
 
-    public static EditTaskDialogFragment newInstance(Task task, int position) {
-        EditTaskDialogFragment fragment = new EditTaskDialogFragment();
+    public static ViewTaskDialogFragment newInstance(Task task,int position) {
+        ViewTaskDialogFragment fragment = new ViewTaskDialogFragment();
         Bundle args = new Bundle();
         args.putParcelable("task", Parcels.wrap(task));
         args.putInt("position", position);
@@ -84,53 +87,37 @@ public class EditTaskDialogFragment extends DialogFragment {
         int statusIndex = statusValue.indexOf(task.getStatus());
         et_taskStatus.setSelection(statusIndex);
 
+        et_taskName.setEnabled(false);
+        et_taskDueDate.setEnabled(false);
+        et_taskNotes.setEnabled(false);
+        et_taskPriorityLevel.setEnabled(false);
+        et_taskStatus.setEnabled(false);
+
         if (actionBar!=null) {
-            final EditTaskDialogFragment window = this;
-            actionBar.setTitle("Edit Task");
+            final ViewTaskDialogFragment window = this;
             actionBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    return onToolBarMenuSelect(v, item,task, position);
+                    return onToolBarMenuSelect(v, item, task, position);
                 }
             });
         }
 
-        actionBar.inflateMenu(R.menu.task_new_menu);
-
-
+        actionBar.inflateMenu(R.menu.task_edit_menu);
         return v;
     }
 
-    private boolean onToolBarMenuSelect(final View v, MenuItem item, Task task, int position) {
+    private boolean onToolBarMenuSelect(final View v, MenuItem item, Task task,int taskPosition) {
         switch (item.getItemId()) {
-            case R.id.action_save_task: {
-                EditText et_taskName = (EditText) v.findViewById(R.id.task_name_value);
-                DatePicker et_taskDueDate = (DatePicker) v.findViewById(R.id.task_due_date_value);
-                EditText et_taskNotes = (EditText) v.findViewById(R.id.task_note_value);
-
-                Spinner et_taskPriorityLevel = (Spinner) v.findViewById(R.id.task_priority_value);
-                Spinner et_taskStatus = (Spinner) v.findViewById(R.id.task_status_value);
-
-                String priorityLevel = et_taskPriorityLevel.getSelectedItem().toString();
-                String status = et_taskStatus.getSelectedItem().toString();
-
-                String taskName = et_taskName.getText().toString();
-                String taskNotes = et_taskNotes.getText().toString();
-
-                int year    = et_taskDueDate.getYear() ;
-                int month   = et_taskDueDate.getMonth() + 1;
-                int day     = et_taskDueDate.getDayOfMonth();
-
-                Date date = new Date(year, month, day);
-                task.setName(taskName);
-                task.setNotes(taskNotes);
-                task.setPriority(priorityLevel);
-                task.setStatus(status);
-                task.setDueDate(date);
-
-                EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
-                listener.saveTask(task, position);
-
+            case R.id.action_edit_task: {
+                ViewTaskDialogListener listener = (ViewTaskDialogListener) getActivity();
+                listener.editTask(task, taskPosition);
+                dismiss();
+                return true;
+            }
+            case  R.id.action_delete_task: {
+                ViewTaskDialogFragment.ViewTaskDialogListener listener = (ViewTaskDialogFragment.ViewTaskDialogListener) getActivity();
+                listener.deleteTask(task, taskPosition);
                 dismiss();
                 return true;
             }
@@ -146,4 +133,3 @@ public class EditTaskDialogFragment extends DialogFragment {
     }
 
 }
-

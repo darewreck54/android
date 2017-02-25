@@ -13,12 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.codepath.taskit.R;
 import com.codepath.taskit.adapters.ITaskDbAdapter;
 import com.codepath.taskit.adapters.TaskDbFlowAdapter;
 import com.codepath.taskit.data.dbflow.Task;
 import com.codepath.taskit.fragments.EditTaskDialogFragment;
+import com.codepath.taskit.fragments.NewTaskDialogFragment;
+import com.codepath.taskit.fragments.ViewTaskDialogFragment;
 import com.codepath.taskit.types.ActionEnum;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -29,21 +32,14 @@ import java.util.List;
 
 import com.codepath.taskit.adapters.TaskAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NewTaskDialogFragment.NewTaskDialogListener,ViewTaskDialogFragment.ViewTaskDialogListener, EditTaskDialogFragment.EditTaskDialogListener {
     private ITaskDbAdapter taskDb;
 
     private List<Task> tasks;
     private ArrayAdapter<Task> itemsAdapter;
 
     ListView lvItems;
-    EditText etEditText;
-
-    private final int ADD_TASK_REQUEST_CODE = 20;
-    private final int EDIT_REQUEST_CODE = 30;
-
-    Button addButton;
     private static String TAG = MainActivity.class.getName();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +47,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.taskDb = new TaskDbFlowAdapter();
-//this.taskDb.clearTable();
         this.lvItems = (ListView) findViewById(R.id.lvItems);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.menu);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setIcon(R.drawable.taskit);
-        //getActionBar().setIcon(R.drawable.taskit);
         init();
     }
 
-    private void showNewTaskDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        EditTaskDialogFragment fragment = EditTaskDialogFragment.newInstance("some title");
-        fragment.show(fm, "test");
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.task_menu, menu);
@@ -76,18 +65,29 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_task:
-                // User chose the "Settings" item, show the app settings UI...
-                //Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                //startActivityForResult (intent, ADD_TASK_REQUEST_CODE);
                 showNewTaskDialog();
-
                 return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
+    }
+
+    private void showNewTaskDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        NewTaskDialogFragment fragment = NewTaskDialogFragment.newInstance("some title");
+        fragment.show(fm, "test");
+    }
+
+    private void viewTaskDialog(Task task, int position) {
+        FragmentManager fm = getSupportFragmentManager();
+        ViewTaskDialogFragment fragment = ViewTaskDialogFragment.newInstance(task, position);
+        fragment.show(fm, "test");
+    }
+
+    private void editTaskDialog(Task task, int position) {
+        FragmentManager fm = getSupportFragmentManager();
+        EditTaskDialogFragment fragment = EditTaskDialogFragment.newInstance(task, position);
+        fragment.show(fm, "test");
     }
     private void init() {
         FlowManager.init(new FlowConfig.Builder(getApplicationContext()).build());
@@ -104,49 +104,37 @@ public class MainActivity extends AppCompatActivity {
         this.lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
-                intent.putExtra("todoItem", Parcels.wrap(tasks.get(position)));
-                intent.putExtra("taskPosition", position);
-                startActivityForResult (intent, EDIT_REQUEST_CODE);
-            }
+                viewTaskDialog(tasks.get(position), position);
+             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK && requestCode == ADD_TASK_REQUEST_CODE) {
-            ActionEnum action = (ActionEnum)data.getExtras().get("action");
-            if(action == ActionEnum.addTask) {
-                Task task = (Task) Parcels.unwrap(data.getParcelableExtra("todoItem"));
-                task = this.taskDb.addTask(task);
-                this.tasks.add(task);
+    public void onFinishNewTaskDialog(Task task) {
+        task = this.taskDb.addTask(task);
+        this.tasks.add(task);
+        itemsAdapter.notifyDataSetChanged();
+        Toast.makeText(this, task.getName() + " created!", Toast.LENGTH_SHORT).show();
+    }
 
-                itemsAdapter.notifyDataSetChanged();
-            }
-            else if(action == ActionEnum.cancel) {
-                //do nothing
-            }
+    @Override
+    public void deleteTask(Task task, int position) {
+        long taskId = task.getId();
+        tasks.remove(position);
+        taskDb.deleteTask(taskId);
+        itemsAdapter.notifyDataSetChanged();
+        Toast.makeText(this, task.getName() + " deleted!", Toast.LENGTH_SHORT).show();
+    }
 
-        }
-        else if(resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE) {
-            ActionEnum action = (ActionEnum)data.getExtras().get("action");
-
-            if(action == ActionEnum.deleteTask) {
-                long taskId = data.getExtras().getLong("taskId");
-                int position = data.getExtras().getInt("taskPosition");
-                tasks.remove(position);
-                taskDb.deleteTask(taskId);
-                itemsAdapter.notifyDataSetChanged();
-            }
-            else if(action == ActionEnum.saveTask) {
-               int position = data.getExtras().getInt("taskPosition");
-                Task task = (Task) Parcels.unwrap(data.getParcelableExtra("todoItem"));
-                tasks.set(position, task);
-                taskDb.updateTask(task.getId(), task);
-                itemsAdapter.notifyDataSetChanged();
-
-            }
-        }
-
+    @Override
+    public void editTask(Task task, int position) {
+        editTaskDialog(task, position);
+    }
+    @Override
+    public void saveTask(Task task, int position) {
+        tasks.set(position, task);
+        taskDb.updateTask(task.getId(), task);
+        itemsAdapter.notifyDataSetChanged();
+        Toast.makeText(this, task.getName() + " was edited!", Toast.LENGTH_SHORT).show();
     }
 }

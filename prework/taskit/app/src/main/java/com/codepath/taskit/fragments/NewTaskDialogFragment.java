@@ -15,34 +15,28 @@ import android.widget.Spinner;
 import com.codepath.taskit.R;
 import com.codepath.taskit.data.dbflow.Task;
 
-import org.parceler.Parcels;
-
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link EditTaskDialogFragment.EditTaskDialogListener} interface
+ * {@link NewTaskDialogFragment.NewTaskDialogListener} interface
  * to handle interaction events.
- * Use the {@link EditTaskDialogFragment#newInstance} factory method to
+ * Use the {@link NewTaskDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditTaskDialogFragment extends DialogFragment {
+public class NewTaskDialogFragment extends DialogFragment {
 
-    public EditTaskDialogFragment() {
+    public NewTaskDialogFragment() {
     }
 
-    public interface EditTaskDialogListener {
-        void saveTask(Task task, int position);
+    public interface NewTaskDialogListener {
+        void onFinishNewTaskDialog(Task task);
     }
 
-    public static EditTaskDialogFragment newInstance(Task task, int position) {
-        EditTaskDialogFragment fragment = new EditTaskDialogFragment();
+    public static NewTaskDialogFragment newInstance(String param1) {
+        NewTaskDialogFragment fragment = new NewTaskDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable("task", Parcels.wrap(task));
-        args.putInt("position", position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,42 +49,17 @@ public class EditTaskDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_edit_task_dialog, container, false);
-        final int position = getArguments().getInt("position");
 
         // set the listener for Navigation
         Toolbar actionBar = (Toolbar) v.findViewById(R.id.menu);
 
-        //set contents
-        final Task task = (Task) Parcels.unwrap( getArguments().getParcelable("task"));
-        EditText et_taskName = (EditText) v.findViewById(R.id.task_name_value);
-        DatePicker et_taskDueDate = (DatePicker) v.findViewById(R.id.task_due_date_value);
-        EditText et_taskNotes = (EditText) v.findViewById(R.id.task_note_value);
-        Spinner et_taskPriorityLevel = (Spinner) v.findViewById(R.id.task_priority_value);
-        Spinner et_taskStatus = (Spinner) v.findViewById(R.id.task_status_value);
-
-        et_taskName.setText(task.getName().toString());
-        et_taskName.requestFocus();
-        et_taskName.setSelection(task.getName().length());
-
-        Date dueDate = task.getDueDate();
-        et_taskDueDate.updateDate(dueDate.getYear(), dueDate.getMonth()-1, dueDate.getDay());
-
-        et_taskNotes.setText(task.getNotes().toString());
-        List<String> prorityValues = Arrays.asList(getResources().getStringArray(R.array.task_priority_values));
-        int priorityIndex = prorityValues.indexOf(task.getPriority());
-        et_taskPriorityLevel.setSelection(priorityIndex);
-
-        List<String> statusValue = Arrays.asList(getResources().getStringArray(R.array.task_status_values));
-        int statusIndex = statusValue.indexOf(task.getStatus());
-        et_taskStatus.setSelection(statusIndex);
-
         if (actionBar!=null) {
-            final EditTaskDialogFragment window = this;
-            actionBar.setTitle("Edit Task");
+            final NewTaskDialogFragment window = this;
+            actionBar.setTitle("Create New Task");
             actionBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    return onToolBarMenuSelect(v, item,task, position);
+                    return onToolBarMenuSelect(v, item);
                 }
             });
         }
@@ -101,7 +70,7 @@ public class EditTaskDialogFragment extends DialogFragment {
         return v;
     }
 
-    private boolean onToolBarMenuSelect(final View v, MenuItem item, Task task, int position) {
+    private boolean onToolBarMenuSelect(final View v, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save_task: {
                 EditText et_taskName = (EditText) v.findViewById(R.id.task_name_value);
@@ -122,14 +91,15 @@ public class EditTaskDialogFragment extends DialogFragment {
                 int day     = et_taskDueDate.getDayOfMonth();
 
                 Date date = new Date(year, month, day);
+                Task task = new Task();
                 task.setName(taskName);
                 task.setNotes(taskNotes);
                 task.setPriority(priorityLevel);
                 task.setStatus(status);
                 task.setDueDate(date);
 
-                EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
-                listener.saveTask(task, position);
+                NewTaskDialogListener listener = (NewTaskDialogListener) getActivity();
+                listener.onFinishNewTaskDialog(task);
 
                 dismiss();
                 return true;
@@ -146,4 +116,3 @@ public class EditTaskDialogFragment extends DialogFragment {
     }
 
 }
-

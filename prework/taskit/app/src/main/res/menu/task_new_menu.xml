@@ -6,11 +6,11 @@
         android:id="@+id/action_save_task"
         android:icon="@drawable/save"
         android:title="@string/add"
-        app:showAsAction="ifRoom"/>/>
+        app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_cancel_task"
-        android:icon="@drawable/cancel"
-        android:title="@string/add"
-        app:showAsAction="ifRoom"/>/>
+    android:id="@+id/action_cancel_task"
+    android:icon="@drawable/cancel"
+    android:title="cancel"
+    app:showAsAction="ifRoom"/>
 
 </menu>

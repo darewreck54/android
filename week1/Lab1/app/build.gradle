@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
     defaultConfig {
-        applicationId "com.codepath.flicks"
+        applicationId "com.codepath.lab1"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
@@ -26,7 +26,4 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
-
-    compile 'com.loopj.android:android-async-http:1.4.9'
-    compile 'com.squareup.picasso:picasso:2.5.2'
 }

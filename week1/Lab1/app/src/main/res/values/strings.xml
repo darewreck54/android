@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Lab1</string>
+    <string name="label">Instagram</string>
+    <string name="help_signingin">Get help signing in.</string>
+    <string name="forgot_details">Forgot your login details?</string>
+    <string name="login_facebook">Log in with Facebook</string>
+</resources>

@@ -28,8 +28,11 @@ public class Movie {
     private List<Long> genreIds;
     private long id;
 
+    private final String BASE_URL = "https://image.tmdb.org/t/p";
+    private final String FILE_SIZE = "w500";
+
     public Movie(JSONObject jsonObject) throws JSONException{
-        this.posterPath = jsonObject.getString("poster_path");
+        this.posterPath = BASE_URL + "/" + FILE_SIZE + jsonObject.getString("poster_path");
         this.isForAdults = jsonObject.getBoolean("adult");
         this.overview = jsonObject.getString("overview");
 
@@ -51,7 +54,7 @@ public class Movie {
         this.originalTitle = jsonObject.getString("original_title");
         this.originalLanguage = jsonObject.getString("original_language");
         this.title = jsonObject.getString("title");
-        this.backdropPath = jsonObject.getString("backdrop_path");
+        this.backdropPath =  BASE_URL + "/" + FILE_SIZE + jsonObject.getString("backdrop_path");
         this.popularity = jsonObject.getLong("popularity");
         this.isVideo = jsonObject.getBoolean("video");
         this.voteCount = jsonObject.getLong("vote_count");

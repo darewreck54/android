@@ -1,6 +1,7 @@
 package com.codepath.flicks.adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,13 @@ import java.util.List;
  */
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
+    // View lookup cache
+    private static class ViewHolder {
+        TextView title;
+        TextView overview;
+        ImageView poster;
+    }
+
     public MovieAdapter(Context context, List<Movie> movies) {
         super(context, android.R.layout.simple_list_item_1);
     }
@@ -28,21 +36,36 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = getItem(position);
+
+        ViewHolder viewHolder;
+
         if(convertView == null) {
+            viewHolder = new ViewHolder();
+
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_box_office_movie, parent, false);
+
+            viewHolder.title = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.overview = (TextView) convertView.findViewById(R.id.tvOverview);
+            viewHolder.poster = (ImageView) convertView.findViewById(R.id.ivPosterImage);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // Lookup views within item layout
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        TextView tvCriticsScore = (TextView) convertView.findViewById(R.id.tvCriticsScore);
-        TextView tvCast = (TextView) convertView.findViewById(R.id.tvCast);
-        ImageView ivPosterImage = (ImageView) convertView.findViewById(R.id.ivPosterImage);
         // Populate the data into the template view using the data object
-        tvTitle.setText(movie.getTitle());
-        tvCriticsScore.setText("Score: " + movie.getPopularity() + "%");
-        tvCast.setText(movie.getOverview());
-        Picasso.with(getContext()).load(movie.getPosterPath()).into(ivPosterImage);
+        viewHolder.title.setText(movie.getTitle());
+        viewHolder.overview.setText(movie.getOverview());
+        String image = null;
+        int orientation = getContext().getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            image = movie.getPosterPath();
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            image = movie.getBackdropPath();
+        }
+
+        Picasso.with(getContext()).load(image).into(viewHolder.poster);
+
         // Return the completed view to render on screen
         return convertView;
     }

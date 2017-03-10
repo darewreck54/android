@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp" >
-
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <ImageView
         android:id="@+id/ivPosterImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:maxHeight="70dp"
+        android:maxHeight="150dp"
         android:scaleType="fitXY"
         android:adjustViewBounds="true" />
 
@@ -25,30 +23,18 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:textStyle="bold"
-            android:hint="The Dark Knight"
+            android:hint=""
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/tvCriticsScore"
+            android:id="@+id/tvOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tvTitle"
             android:layout_below="@+id/tvTitle"
-            android:hint="91%"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tvCast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvCriticsScore"
-            android:maxLines="1"
             android:ellipsize="end"
-            android:hint="Christian Bale, Joseph-Gordon Levitt, Heath Ledger, Maggie Gylenhall"
+            android:hint=""
             android:textSize="12sp" />
 
     </RelativeLayout>
-
 </RelativeLayout>

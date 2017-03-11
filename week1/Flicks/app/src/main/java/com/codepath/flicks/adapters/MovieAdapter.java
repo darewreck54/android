@@ -16,6 +16,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by darewreck_PC on 3/8/2017.
  */
@@ -81,7 +83,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
                 image = movie.getBackdropPath();
             }
 
-            Picasso.with(getContext()).load(image).into(viewHolder.poster);
+            Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster);
 
         }
         else if(LayoutType.POPULAR.ordinal() == type) {
@@ -103,7 +105,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             // Populate the data into the template view using the data object
             String image = movie.getBackdropPath();
 
-            Picasso.with(getContext()).load(image).into(viewHolder.poster);
+            Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster);
         }
 
 

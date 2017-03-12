@@ -2,7 +2,6 @@ package com.codepath.flicks.adapters;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Optional;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
@@ -23,11 +25,24 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
  */
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
+
+
     // View lookup cache
-    private static class ViewHolder {
-        TextView title;
-        TextView overview;
-        ImageView poster;
+    public static class ViewHolder {
+        @BindView(R.id.tv_title) TextView title;
+        @BindView(R.id.tv_overview) TextView overview;
+        @BindView(R.id.ivPosterImage) ImageView poster;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+    public static class ViewHolder2 {
+        @BindView(R.id.ivPosterImage) ImageView poster1;
+
+        public ViewHolder2(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     public MovieAdapter(Context context, List<Movie> movies) {
@@ -47,7 +62,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         return (getItem(position).getVoteAverage() > POPULAR_STAR_RATING)? LayoutType.POPULAR.ordinal(): LayoutType.NORMAL.ordinal();
     }
 
-    @NonNull
+    @Optional
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item type for this position
@@ -60,13 +75,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             ViewHolder viewHolder;
 
             if(convertView == null) {
-                viewHolder = new ViewHolder();
-
                 convertView = getInflatedLayoutForType(type, parent);
+                viewHolder = new ViewHolder(convertView);
 
-                viewHolder.title = (TextView) convertView.findViewById(R.id.tvTitle);
-                viewHolder.overview = (TextView) convertView.findViewById(R.id.tvOverview);
-                viewHolder.poster = (ImageView) convertView.findViewById(R.id.ivPosterImage);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -89,23 +100,20 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         else if(LayoutType.POPULAR.ordinal() == type) {
             Movie movie = getItem(position);
 
-            ViewHolder viewHolder;
+            ViewHolder2 viewHolder;
 
             if(convertView == null) {
-                viewHolder = new ViewHolder();
-
                 convertView = getInflatedLayoutForType(type, parent);
-
-                viewHolder.poster = (ImageView) convertView.findViewById(R.id.ivPosterImage);
+                viewHolder = new ViewHolder2(convertView);
                 convertView.setTag(viewHolder);
             } else {
-                viewHolder = (ViewHolder) convertView.getTag();
+                viewHolder = (ViewHolder2) convertView.getTag();
             }
 
             // Populate the data into the template view using the data object
             String image = movie.getBackdropPath();
 
-            Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster);
+            Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster1);
         }
 
 

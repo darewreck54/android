@@ -38,6 +38,8 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.6'
 
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     testCompile 'junit:junit:4.12'
 }

@@ -22,23 +22,27 @@ import org.parceler.Parcels;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private MovieDbClient client;
-    private ListView lvMovies;
     private MovieAdapter adapterMovies;
     private final int DETAIL_MOVIE_REQUEST_CODE = 30;
     private ArrayList<Movie> aMovies;
     private final String TAG = MainActivity.class.getName();
+
+    @BindView(R.id.lvMovies) ListView lvMovies;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        lvMovies = (ListView) findViewById(R.id.lvMovies);
         aMovies = new ArrayList<Movie>();
         adapterMovies = new MovieAdapter(this, aMovies);
         lvMovies.setAdapter(adapterMovies);

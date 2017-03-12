@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/ivPosterImage"
+        android:id="@+id/iv_posterImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -13,14 +13,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_toRightOf="@+id/ivPosterImage"
+        android:layout_toRightOf="@+id/iv_posterImage"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tvTitle"
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -28,10 +28,10 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tvOverview"
+        android:id="@+id/tv_overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTitle"
+        android:layout_below="@+id/tv_title"
         android:ellipsize="end"
         android:hint=""
         android:textSize="12sp" />

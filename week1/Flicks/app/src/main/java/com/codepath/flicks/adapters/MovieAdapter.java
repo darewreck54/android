@@ -96,7 +96,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
                 image = movie.getBackdropPath();
             }
 
-            Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster);
+            Picasso.with(getContext()).load(image).resize(400,250).placeholder(R.mipmap.movie_icon).error(R.mipmap.movie_icon).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster);
 
         }
         else if(MovieAdapterLayoutType.POPULAR.ordinal() == type) {
@@ -115,7 +115,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             // Populate the data into the template view using the data object
             String image = movie.getBackdropPath();
 
-            Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster1);
+            Picasso.with(getContext()).load(image).resize(600,300).placeholder(R.mipmap.movie_icon).error(R.mipmap.movie_icon).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster1);
         }
 
 

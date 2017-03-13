@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.codepath.flicks.R;
 import com.codepath.flicks.adapters.MovieAdapter;
+import com.codepath.flicks.adapters.MovieAdapterLayoutType;
 import com.codepath.flicks.models.Movie;
 import com.codepath.flicks.network.MovieDbClient;
 
@@ -54,11 +55,18 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 int layoutType = adapterMovies.getItemViewType(position);
                 Movie movie = (Movie) adapterView.getItemAtPosition(position);
-                Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-                intent.putExtra("movie", Parcels.wrap(movie));
-                intent.putExtra("movieIndex", position);
-                intent.putExtra("layoutType", layoutType);
-                startActivity(intent);
+                if(MovieAdapterLayoutType.NORMAL.ordinal() == layoutType) {
+                    Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+                    intent.putExtra("movie", Parcels.wrap(movie));
+                    intent.putExtra("movieIndex", position);
+                    startActivity(intent);
+                }
+                else if (MovieAdapterLayoutType.POPULAR.ordinal() == layoutType){
+                    Intent intent = new Intent(MainActivity.this, TrailerActivity.class);
+                    intent.putExtra("movie", Parcels.wrap(movie));
+                    intent.putExtra("movieIndex", position);
+                    startActivity(intent);
+                }
             }
         });
     }

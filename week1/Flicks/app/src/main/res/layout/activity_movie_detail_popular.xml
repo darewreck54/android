@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
     tools:context="com.codepath.flicks.activities.MovieDetailActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -20,11 +22,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <fragment
+        android:id="@+id/youtubeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.youtube.player.YouTubePlayerFragment">
+    </fragment>
+<!--
     <com.google.android.youtube.player.YouTubePlayerView
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
+-->
 </android.support.design.widget.CoordinatorLayout>
 
 

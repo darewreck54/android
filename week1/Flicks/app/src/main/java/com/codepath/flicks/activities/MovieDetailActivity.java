@@ -1,6 +1,8 @@
 package com.codepath.flicks.activities;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -11,10 +13,9 @@ import com.codepath.flicks.interfaces.IMovieClient;
 import com.codepath.flicks.models.Movie;
 import com.codepath.flicks.models.Trailer;
 import com.codepath.flicks.network.MovieDbClient;
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +33,12 @@ import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 
-public class MovieDetailActivity extends YouTubeBaseActivity {
+public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_title) TextView tv_title;
     @BindView(R.id.tv_overview) TextView tv_overview;
     @BindView(R.id.tv_popularityScore) TextView tv_popularityScore;
     @BindView(R.id.rb_starRating) RatingBar rb_starRate;
-    @BindView(R.id.player) YouTubePlayerView youTubePlayerView;
+   // @BindView(R.id.player) YouTubePlayerView youTubePlayerView;
     private static IMovieClient client = new MovieDbClient();
     private final String YOUTUBE_API_KEY = "AIzaSyC_lcsmYGbxitZgmc9vpm32dwHVu4_lxOQ";
 
@@ -45,14 +46,18 @@ public class MovieDetailActivity extends YouTubeBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         final Movie movie =  (Movie) Parcels.unwrap(getIntent().getParcelableExtra("movie"));
         int layoutType = getIntent().getIntExtra("layoutType", -1);
 
         if(MovieAdapterLayoutType.POPULAR.ordinal() == layoutType) {
             setContentView(R.layout.activity_movie_detail_popular);
 
-            YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.player);
-            youTubePlayerView.initialize(YOUTUBE_API_KEY,
+            YouTubePlayerFragment youtubeFragment = (YouTubePlayerFragment)
+                    getFragmentManager().findFragmentById(R.id.youtubeFragment);
+
+            youtubeFragment.initialize(YOUTUBE_API_KEY,
                 new YouTubePlayer.OnInitializedListener() {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
@@ -104,7 +109,10 @@ public class MovieDetailActivity extends YouTubeBaseActivity {
             tv_overview.setText(movie.getOverview());
             tv_popularityScore.setText(String.valueOf(movie.getPopularity()));
 
-            youTubePlayerView.initialize(YOUTUBE_API_KEY,
+            YouTubePlayerFragment youtubeFragment = (YouTubePlayerFragment)
+                    getFragmentManager().findFragmentById(R.id.youtubeFragment);
+
+            youtubeFragment.initialize(YOUTUBE_API_KEY,
                     new YouTubePlayer.OnInitializedListener() {
                         @Override
                         public void onInitializationSuccess(YouTubePlayer.Provider provider,
@@ -148,22 +156,18 @@ public class MovieDetailActivity extends YouTubeBaseActivity {
 
         }
 
-
-        /*
+        // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        */
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

@@ -20,11 +20,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!--
     <com.google.android.youtube.player.YouTubePlayerView
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
+-->
+    <fragment
+        android:id="@+id/youtubeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.youtube.player.YouTubePlayerFragment">
+    </fragment>
 </android.support.design.widget.CoordinatorLayout>
 
 

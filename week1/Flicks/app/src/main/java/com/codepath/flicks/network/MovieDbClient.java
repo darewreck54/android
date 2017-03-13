@@ -36,9 +36,22 @@ public class MovieDbClient implements IMovieClient {
                 .build();
 
         client.newCall(request).enqueue(handler);
-        //RequestParams params = new RequestParams("api_key", this.API_KEY);
-        //client.get(url, params, handler);
     }
+
+    @Override
+    public void getTrailerForBoxOfficeMovies(String id, Callback handler) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(getApiUrl(id + "/videos")).newBuilder();
+        urlBuilder.addQueryParameter("api_key", this.API_KEY);
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(handler);
+
+    }
+
 
     /* Setters/Getters */
 

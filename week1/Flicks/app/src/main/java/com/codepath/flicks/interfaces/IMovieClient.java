@@ -8,4 +8,5 @@ import okhttp3.Callback;
 
 public interface IMovieClient {
     void getBoxOfficeMovies(Callback handler);
+    void getTrailerForBoxOfficeMovies(String movidId, Callback handler);
 }

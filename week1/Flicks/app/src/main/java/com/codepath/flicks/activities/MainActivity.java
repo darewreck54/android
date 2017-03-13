@@ -48,17 +48,19 @@ public class MainActivity extends AppCompatActivity {
         lvMovies.setAdapter(adapterMovies);
 
         fetchBoxOfficeMovies();
+
         this.lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                int layoutType = adapterMovies.getItemViewType(position);
                 Movie movie = (Movie) adapterView.getItemAtPosition(position);
                 Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
                 intent.putExtra("movie", Parcels.wrap(movie));
                 intent.putExtra("movieIndex", position);
-                startActivityForResult (intent, DETAIL_MOVIE_REQUEST_CODE);
+                intent.putExtra("layoutType", layoutType);
+                startActivity(intent);
             }
         });
-
     }
 
     private void fetchBoxOfficeMovies() {

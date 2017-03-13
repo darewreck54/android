@@ -50,23 +50,19 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         super(context, 0, movies);
     }
 
-    private enum LayoutType{
-        NORMAL,
-        POPULAR
-    }
     private final int POPULAR_STAR_RATING = 5;
 
     @Override
     public int getViewTypeCount() {
         // Returns the number of types of Views that will be created by this adapter
         // Each type represents a set of views that can be converted
-        return LayoutType.values().length;
+        return MovieAdapterLayoutType.values().length;
     }
 
     // Return an integer representing the type by fetching the enum type ordinal
     @Override
     public int getItemViewType(int position) {
-        return (getItem(position).getVoteAverage() > POPULAR_STAR_RATING)? LayoutType.POPULAR.ordinal(): LayoutType.NORMAL.ordinal();
+        return (getItem(position).getVoteAverage() > POPULAR_STAR_RATING)? MovieAdapterLayoutType.POPULAR.ordinal(): MovieAdapterLayoutType.NORMAL.ordinal();
     }
 
     @NonNull
@@ -76,16 +72,14 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         int type = getItemViewType(position);
 
 
-        if(LayoutType.NORMAL.ordinal() == type) {
-            Movie movie = getItem(position);
+        if(MovieAdapterLayoutType.NORMAL.ordinal() == type) {
+            final Movie movie = getItem(position);
 
             ViewHolder viewHolder;
 
             if(convertView == null) {
                 convertView = getInflatedLayoutForType(type, parent);
                 viewHolder = new ViewHolder(convertView);
-
-
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -105,7 +99,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             Picasso.with(getContext()).load(image).transform(new RoundedCornersTransformation(10,10)).into(viewHolder.poster);
 
         }
-        else if(LayoutType.POPULAR.ordinal() == type) {
+        else if(MovieAdapterLayoutType.POPULAR.ordinal() == type) {
             Movie movie = getItem(position);
 
             ViewHolder2 viewHolder;
@@ -113,7 +107,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             if(convertView == null) {
                 convertView = getInflatedLayoutForType(type, parent);
                 viewHolder = new ViewHolder2(convertView);
-
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder2) convertView.getTag();
@@ -134,9 +127,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
     private View getInflatedLayoutForType(int type, ViewGroup parent) {
         View selectedView = null;
 
-        if (type == 0) {
+        if (MovieAdapterLayoutType.NORMAL.ordinal() == type) {
             selectedView =  LayoutInflater.from(getContext()).inflate(R.layout.item_box_office_movie, parent, false);
-        } else if (type == 1) {
+        } else if (MovieAdapterLayoutType.POPULAR.ordinal() == type) {
             selectedView =  LayoutInflater.from(getContext()).inflate(R.layout.item_box_office_movie_popular, parent, false);
         }
         else {

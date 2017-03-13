@@ -42,7 +42,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/darewreck54/android/blob/master/week1/Flicks/gif/flicks_v1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/darewreck54/android/blob/master/week1/Flicks/gif/flicks_v2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

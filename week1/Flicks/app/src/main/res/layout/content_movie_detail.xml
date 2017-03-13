@@ -51,6 +51,12 @@
         app:layout_constraintTop_toBottomOf="@+id/rb_starRating"
         tools:layout_editor_absoluteX="8dp" />
 
-
-
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/player"
+        android:layout_width="367dp"
+        android:layout_height="151dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_overview"
+        tools:layout_editor_absoluteY="313dp" />
 </android.support.constraint.ConstraintLayout>

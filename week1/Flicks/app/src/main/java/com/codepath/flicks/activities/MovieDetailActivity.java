@@ -37,8 +37,9 @@ public class MovieDetailActivity extends YouTubeBaseActivity {
     @BindView(R.id.tv_overview) TextView tv_overview;
     @BindView(R.id.tv_popularityScore) TextView tv_popularityScore;
     @BindView(R.id.rb_starRating) RatingBar rb_starRate;
-
+    @BindView(R.id.player) YouTubePlayerView youTubePlayerView;
     private static IMovieClient client = new MovieDbClient();
+    private final String YOUTUBE_API_KEY = "AIzaSyC_lcsmYGbxitZgmc9vpm32dwHVu4_lxOQ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +51,60 @@ public class MovieDetailActivity extends YouTubeBaseActivity {
         if(MovieAdapterLayoutType.POPULAR.ordinal() == layoutType) {
             setContentView(R.layout.activity_movie_detail_popular);
 
-
-
             YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.player);
+            youTubePlayerView.initialize(YOUTUBE_API_KEY,
+                new YouTubePlayer.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                                                        YouTubePlayer youTubePlayer, boolean b) {
 
+                        final YouTubePlayer this_youTubPalyer = youTubePlayer;
+                        client.getTrailerForBoxOfficeMovies(String.valueOf(movie.getId()), new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.d(TAG, "Error in receiving trailer: " + e.getStackTrace());
+                            }
 
-            youTubePlayerView.initialize("AIzaSyC_lcsmYGbxitZgmc9vpm32dwHVu4_lxOQ",
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+
+                                if(response.isSuccessful()) {
+                                    String responseData = response.body().string();
+                                    try {
+                                        JSONObject json = new JSONObject(responseData);
+                                        JSONArray jsonArray = json.getJSONArray("results");
+                                        ArrayList<Trailer> trailers = Trailer.fromJsonArray(jsonArray);
+                                        if(trailers.size() > 0) {
+                                            this_youTubPalyer.loadVideo(trailers.get(0).key);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else {
+                                    Log.d(TAG, "Error in receiving trailer: " + response.message());
+                                }
+                            }
+                        });
+                    }
+                    @Override
+                    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                                        YouTubeInitializationResult youTubeInitializationResult) {
+
+                    }
+                });
+        }
+        else if (MovieAdapterLayoutType.NORMAL.ordinal() == layoutType) {
+            setContentView(R.layout.activity_movie_detail);
+            ButterKnife.bind(this);
+
+            rb_starRate.setIsIndicator(true);
+            rb_starRate.setRating( movie.getVoteAverage()/2);
+            tv_title.setText(movie.getTitle());
+            tv_overview.setText(movie.getOverview());
+            tv_popularityScore.setText(String.valueOf(movie.getPopularity()));
+
+            youTubePlayerView.initialize(YOUTUBE_API_KEY,
                     new YouTubePlayer.OnInitializedListener() {
                         @Override
                         public void onInitializationSuccess(YouTubePlayer.Provider provider,
@@ -96,16 +145,7 @@ public class MovieDetailActivity extends YouTubeBaseActivity {
 
                         }
                     });
-        }
-        else if (MovieAdapterLayoutType.NORMAL.ordinal() == layoutType) {
-            setContentView(R.layout.activity_movie_detail);
-            ButterKnife.bind(this);
 
-            rb_starRate.setIsIndicator(true);
-            rb_starRate.setRating( movie.getVoteAverage()/2);
-            tv_title.setText(movie.getTitle());
-            tv_overview.setText(movie.getOverview());
-            tv_popularityScore.setText(String.valueOf(movie.getPopularity()));
         }
 
 

@@ -3,6 +3,7 @@ package com.codepath.flicks.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,25 +13,29 @@ import java.util.List;
  * Created by darewreck_PC on 3/8/2017.
  */
 
+@Parcel(analyze={Movie.class})
 public class Movie {
-    private String posterPath;
-    private String originalTitle;
-    private String originalLanguage;
-    private String title;
-    private String backdropPath;
-    private long popularity;
-    private long voteCount;
-    private boolean isVideo;
-    private long voteAverage;
-    private boolean isForAdults;
-    private Date release_date;
-    private String overview;
-    private List<Long> genreIds;
-    private long id;
+    public String posterPath;
+    public String originalTitle;
+    public String originalLanguage;
+    public String title;
+    public String backdropPath;
+    public long popularity;
+    public long voteCount;
+    public boolean isVideo;
+    public long voteAverage;
+    public boolean isForAdults;
+    public Date release_date;
+    public String overview;
+    public List<Long> genreIds;
+    public long id;
 
-    private final String BASE_URL = "https://image.tmdb.org/t/p";
-    private final String FILE_SIZE = "w500";
+    public String BASE_URL = "https://image.tmdb.org/t/p";
+    public String FILE_SIZE = "w500";
 
+    public Movie () {
+
+    }
     public Movie(JSONObject jsonObject) throws JSONException{
         this.posterPath = BASE_URL + "/" + FILE_SIZE + jsonObject.getString("poster_path");
         this.isForAdults = jsonObject.getBoolean("adult");

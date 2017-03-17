@@ -1,20 +1,12 @@
 package com.codepath.flicks.network;
 
-import android.util.Log;
-
 import com.codepath.flicks.interfaces.IMovieClient;
-import com.codepath.flicks.models.Movie;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
-import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by darewreck_PC on 3/8/2017.
@@ -24,17 +16,42 @@ public class MovieDbClient implements IMovieClient {
     private final String TAG = MovieDbClient.class.getName();
     private final String API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed";
     private final String API_BASE_URL ="https://api.themoviedb.org/3/movie/";
-    private AsyncHttpClient client;
+    private OkHttpClient client;
+
     public MovieDbClient() {
-        client = new AsyncHttpClient();
+
+        client = new OkHttpClient();
     }
 
     @Override
-    public void getBoxOfficeMovies(JsonHttpResponseHandler handler) {
-        String url = getApiUrl("now_playing");
-        RequestParams params = new RequestParams("api_key", this.API_KEY);
-        client.get(url, params, handler);
+    public void getBoxOfficeMovies(Callback handler) {
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(getApiUrl("now_playing")).newBuilder();
+        urlBuilder.addQueryParameter("api_key", this.API_KEY);
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(handler);
     }
+
+    @Override
+    public void getTrailerForBoxOfficeMovies(String id, Callback handler) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(getApiUrl(id + "/videos")).newBuilder();
+        urlBuilder.addQueryParameter("api_key", this.API_KEY);
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(handler);
+
+    }
+
 
     /* Setters/Getters */
 

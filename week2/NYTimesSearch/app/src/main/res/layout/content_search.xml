@@ -15,8 +15,10 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay" >
-    </android.support.v7.widget.Toolbar>
 
+     </android.support.v7.widget.Toolbar>
+
+<!--
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,7 +29,7 @@
         android:id="@+id/etQuery"
         android:hint="@string/searchHint"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/gvResults" />
+        android:layout_above="@+id/rvResults" />
 
     <Button
         android:text="Button"
@@ -40,24 +42,14 @@
         android:layout_below="@+id/toolbar"
         android:hint="@string/search"
         />
-
+-->
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btSearch"
+        android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:id="@+id/rvResults"/>
 
-    <!--
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btSearch"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/gvResults"
-        android:numColumns="2" />
-
-        -->
 
 
 </RelativeLayout>

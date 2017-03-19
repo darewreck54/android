@@ -77,7 +77,14 @@ public class FilterDialogueFragment extends DialogFragment implements DatePicker
         this.cbSports.setChecked(settings.getBoolean("Sports", false));
         int index = (int)settings.getLong("SortBy", 0);
         this.spSortOrder.setSelection(index);
-        this.etBeginDate.setText(settings.getString("BeginDate", "--/--/----"));
+
+        String date = settings.getString("BeginDate", null);
+        if(date == null){
+            this.etBeginDate.setText("--/--/----");
+        } else {
+            this.etBeginDate.setText(date);
+        }
+
         return view;
     }
 
@@ -89,7 +96,13 @@ public class FilterDialogueFragment extends DialogFragment implements DatePicker
         editor.putBoolean("Sports", this.cbSports.isChecked());
         editor.putBoolean("FashionStyle", this.cbFashionStyle.isChecked());
         editor.putLong("SortBy", this.spSortOrder.getSelectedItemId());
-        editor.putString("BeginDate",this.etBeginDate.getText().toString());
+        if(this.etBeginDate.getText().equals("--/--/----")){
+            editor.putString("BeginDate",null);
+        }
+        else {
+            editor.putString("BeginDate",this.etBeginDate.getText().toString());
+        }
+
         editor.commit();
         getDialog().dismiss();
     }

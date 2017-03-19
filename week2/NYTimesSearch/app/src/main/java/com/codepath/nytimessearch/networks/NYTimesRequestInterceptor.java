@@ -11,6 +11,7 @@ import okhttp3.Request;
 
 public class NYTimesRequestInterceptor implements Interceptor {
     private static final String API_KEY = "d98ec721e1f9427b9f1230aad3c5053d";
+//    private static final String API_KEY2 = "d98ec721e1f9427b9f1230aad3c5053d"
 
     @Override
     public okhttp3.Response intercept(Chain chain) throws IOException {

@@ -186,9 +186,16 @@ public class SearchActivity extends AppCompatActivity {
                         adapter.notifyItemChanged(0);
                     }
                 } else {
-                  //  if(response.code() == 429) {
+                    if(response.code() == 429) {
                     //    handler.postDelayed(runnableCode, 500);
-                   // }
+                        Toast.makeText(getApplicationContext(),"Please try again in a bit.  Hit NYTime API Limit.",Toast.LENGTH_SHORT).show();
+                        // Run the above code block on the main thread after 2 seconds
+                        handler.postDelayed(runnableCode, 300);
+
+                    }
+                    else {
+                        Log.d(TAG,"Request to retrieve articles failed: " + response.message());
+                    }
                     //Toast.makeText(getApplicationContext(), "Request to retrieve articles failed: " + response.message(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG,"Request to retrieve articles failed: " + response.message());
                     //handler.postDelayed(runnableCode, 500);
@@ -200,10 +207,11 @@ public class SearchActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Search Request Failed: " + t.getMessage());
               //  handler.postDelayed(runnableCode, 500);
+                // Run the above code block on the main thread after 2 seconds
+                handler.postDelayed(runnableCode, 300);
+
             }
         });
-        // Run the above code block on the main thread after 2 seconds
-        handler.postDelayed(runnableCode, 500);
          }
          else {
             Toast.makeText(getApplicationContext(), "Not internet detected.  Please try again", Toast.LENGTH_SHORT).show();

@@ -28,7 +28,7 @@ The following **optional** features are implemented:
 The following **bonus** features are implemented:
 
 * [x] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the `StaggeredGridLayoutManager` to display improve the grid of image results
-* [ ] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
+* [ x] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
 * [x] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler). With this version, this was not needed.
 * [x] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
 * [x] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
@@ -50,7 +50,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/darewreck54/android/blob/master/week2/NYTimesSearch/gif/nytime_v1.gif' title='NYTimesSearch Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/darewreck54/android/blob/master/week2/NYTimesSearch/gif/nytime_v2.gif' title='NYTimesSearch Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -61,6 +61,7 @@ Describe any challenges encountered while building the app.
 - learning new libraries and figuring how they work in respect to activities and fragements and how the data will be passed around
 - Issues with were emulator related 
 - Issues with things not working due to mismatch in library versions
+- While tesitng, I would hit the API limit eventhou I enlarge the pictures/text to slow down the calls.  So the version 2 gif is not reflective of endless scrolling
 
 ## Open-source libraries used
 

@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="40dp"
-    android:layout_marginRight="40dp"
     tools:context="com.codepath.nytimessearch.fragments.FilterDialogueFragment">
 
     <TextView
@@ -13,8 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
-        android:text="@string/beginDate" />
+        android:layout_marginTop="20dp"
+        android:text="@string/beginDate"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etBeginDate"
@@ -24,7 +26,10 @@
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:inputType="date"
-        android:text="02/12/2013" />
+        android:text="02/12/2013"
+        android:maxLength="10"
+        android:textAlignment="center"
+        android:editable="false"/>
 
     <ImageView
         android:id="@+id/ivDatePicker"
@@ -40,21 +45,23 @@
         android:id="@+id/tvSortOrder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/tvBeginDate"
-        android:layout_alignRight="@+id/tvBeginDate"
         android:layout_below="@+id/etBeginDate"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        tools:text="Sort Order" />
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Sort Order" />
 
     <Spinner
         android:id="@+id/spSortOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvSortOrder"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="20dp"
         android:textAlignment="center"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
         android:entries="@array/sort_array" />
 
 
@@ -64,13 +71,18 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/spSortOrder"
         android:layout_above="@+id/btSave">
+
         <TextView
             android:id="@+id/tvNewsDeskValues"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:text="News Desk Values"
-            android:layout_centerHorizontal="true" />
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
         <TextView
@@ -78,7 +90,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sports"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
+
             android:layout_below="@+id/cbArts"
             android:layout_alignRight="@+id/tvNewsDeskValues"
             android:layout_alignEnd="@+id/tvNewsDeskValues" />
@@ -109,15 +123,16 @@
             android:layout_below="@+id/tvNewsDeskValues"
             android:layout_alignLeft="@+id/cbArts"
             android:layout_alignStart="@+id/cbArts"
-            android:layout_marginTop="19dp" />
+            android:layout_marginTop="20dp"
+            android:layout_alignParentLeft="@+id/tvNewsDeskValues"
+            />
 
         <CheckBox
             android:id="@+id/cbArts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginRight="17dp"
-            android:layout_marginEnd="17dp"
+            android:layout_marginEnd="30dp"
             android:layout_below="@+id/cbFashionStyle"
             android:layout_toLeftOf="@+id/tvFashionStyle"
             android:layout_toStartOf="@+id/tvFashionStyle" />

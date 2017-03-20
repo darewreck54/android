@@ -3,21 +3,18 @@ package com.codepath.nytimessearch.fragments;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.codepath.nytimessearch.R;
 
@@ -36,7 +33,8 @@ import butterknife.OnClick;
  * create an instance of this fragment.
  */
 public class FilterDialogueFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-    @BindView(R.id.etBeginDate) EditText etBeginDate;
+    @BindView(R.id.etBeginDate)
+    TextView etBeginDate;
     @BindView(R.id.spSortOrder) Spinner spSortOrder;
     @BindView(R.id.cbArts) CheckBox cbArts;
     @BindView(R.id.cbFashionStyle) CheckBox cbFashionStyle;
@@ -63,13 +61,15 @@ public class FilterDialogueFragment extends DialogFragment implements DatePicker
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter_dialogue, container, false);
+        getDialog().getWindow().setLayout(200,400);
+
         ButterKnife.bind(this, view);
         SharedPreferences settings = getActivity().getSharedPreferences("filterSetting",Context.MODE_PRIVATE);
         this.cbArts.setChecked(settings.getBoolean("Arts", false));
@@ -80,7 +80,7 @@ public class FilterDialogueFragment extends DialogFragment implements DatePicker
 
         String date = settings.getString("BeginDate", null);
         if(date == null){
-            this.etBeginDate.setText("--/--/----");
+            this.etBeginDate.setText(null);
         } else {
             this.etBeginDate.setText(date);
         }
@@ -96,7 +96,7 @@ public class FilterDialogueFragment extends DialogFragment implements DatePicker
         editor.putBoolean("Sports", this.cbSports.isChecked());
         editor.putBoolean("FashionStyle", this.cbFashionStyle.isChecked());
         editor.putLong("SortBy", this.spSortOrder.getSelectedItemId());
-        if(this.etBeginDate.getText().equals("--/--/----")){
+        if(TextUtils.isEmpty(this.etBeginDate.getText())){
             editor.putString("BeginDate",null);
         }
         else {

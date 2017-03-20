@@ -167,7 +167,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void searchArticles(QuerySearchParams queryParms, int page) {
-        // if(isInternetAvailable(this.getApplicationContext())) {
+        if(isInternetAvailable(this.getApplicationContext())) {
         Call<NYTimesArticleSearchResponse> call = service.getArticles(queryParms.query, page, queryParms.filter, queryParms.convertedDate, queryParms.sortBy);
         call.enqueue(new Callback<NYTimesArticleSearchResponse>() {
             @Override
@@ -186,6 +186,9 @@ public class SearchActivity extends AppCompatActivity {
                         adapter.notifyItemChanged(0);
                     }
                 } else {
+                  //  if(response.code() == 429) {
+                    //    handler.postDelayed(runnableCode, 500);
+                   // }
                     //Toast.makeText(getApplicationContext(), "Request to retrieve articles failed: " + response.message(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG,"Request to retrieve articles failed: " + response.message());
                     //handler.postDelayed(runnableCode, 500);
@@ -201,10 +204,10 @@ public class SearchActivity extends AppCompatActivity {
         });
         // Run the above code block on the main thread after 2 seconds
         handler.postDelayed(runnableCode, 500);
-        // }
-        // else {
-        //    Toast.makeText(getApplicationContext(), "Not internet detected.  Please try again", Toast.LENGTH_SHORT).show();
-        //}
+         }
+         else {
+            Toast.makeText(getApplicationContext(), "Not internet detected.  Please try again", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -231,11 +234,13 @@ public class SearchActivity extends AppCompatActivity {
         return true;
     }
 
+    private boolean filterChange = false;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter: {
                 showFilterDialog();
+                filterChange = true;
                 return true;
             }
             default:
@@ -249,7 +254,15 @@ public class SearchActivity extends AppCompatActivity {
         fragment.show(fm, "fragment_filter");
     }
 
+    private String previousQuery = null;
     public void onArticleSearch(String query) {
+        if(previousQuery!=null && previousQuery.equals(query) && !filterChange){
+
+            return;
+        }
+        previousQuery = query;
+        filterChange = false;
+
         query = TextUtils.isEmpty(query) ? null : query;
 
         SharedPreferences settings = this.getSharedPreferences("filterSetting", Context.MODE_PRIVATE);
@@ -287,7 +300,7 @@ public class SearchActivity extends AppCompatActivity {
 
         String beginDate = settings.getString("BeginDate", null);
         String convertedDate = null;
-        if(beginDate != null && !beginDate.equals("--/--/----")) {
+        if(!TextUtils.isEmpty(beginDate) ) {
             final Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
             convertedDate = df.format(new Date(beginDate));

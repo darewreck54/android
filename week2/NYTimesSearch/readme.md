@@ -61,7 +61,8 @@ Describe any challenges encountered while building the app.
 - learning new libraries and figuring how they work in respect to activities and fragements and how the data will be passed around
 - Issues with were emulator related 
 - Issues with things not working due to mismatch in library versions
-- While tesitng, I would hit the API limit eventhou I enlarge the pictures/text to slow down the calls.  So the version 2 gif is not reflective of endless scrolling
+- While tesitng, I would hit the API limit eventhou I enlarge the pictures/text to slow down the calls.  
+- Share web url is implemented, but did not capture it in the video because the emulator only had text message and access to my google contacts which I did not want to be on the video.
 
 ## Open-source libraries used
 

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.nytimessearch.R;
 import com.codepath.nytimessearch.models.Doc;
 import com.codepath.nytimessearch.models.Multimedium;
@@ -82,7 +83,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 if(multimedium.getSubtype().equals("thumbnail")){
                     String thumbnail = "http://www.nytimes.com/" + multimedium.getUrl();
                     if(!TextUtils.isEmpty(thumbnail)) {
-                        Picasso.with(getContext()).load(thumbnail).into(viewHolder.ivThumbnail);
+                        //Picasso.with(getContext()).load(thumbnail).into(viewHolder.ivThumbnail);
+                        Glide.with(getContext()).load(thumbnail).into(viewHolder.ivThumbnail);
                     }
                 }
             }

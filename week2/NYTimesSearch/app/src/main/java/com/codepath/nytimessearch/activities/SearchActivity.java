@@ -1,14 +1,21 @@
 package com.codepath.nytimessearch.activities;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -110,14 +117,38 @@ public class SearchActivity extends AppCompatActivity {
         StaggeredGridLayoutManager gridLayout = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         this.binding.search.rvResults.setLayoutManager(gridLayout);
 
+        final Activity _activity = this;
         ItemClickSupport.addTo(this.binding.search.rvResults).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent intent = new Intent(SearchActivity.this, WebviewActivity.class);
                         Doc article = articles.get(position);
-                        intent.putExtra("web_url", article.getWebUrl());
-                        startActivity(intent);
+
+                        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                        // set toolbar color and/or setting custom actions before invoking build()
+
+                        builder.setToolbarColor(ContextCompat.getColor(_activity, R.color.colorPrimary));
+                        //builder.addDefaultShareMenuItem();
+
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_icon_share);
+
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_TEXT, article.getWebUrl());
+
+                        int requestCode = 100;
+
+                        PendingIntent pendingIntent = PendingIntent.getActivity(_activity,
+                                requestCode,
+                                intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        builder.setActionButton(bitmap, "Share Link", pendingIntent, true);
+                        // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
+                        CustomTabsIntent customTabsIntent = builder.build();
+                        // and launch the desired Url with CustomTabsIntent.launchUrl()
+                        customTabsIntent.launchUrl(_activity, Uri.parse(article.getWebUrl()));
+
                     }
                 }
         );

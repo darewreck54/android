@@ -3,17 +3,17 @@ package com.codepath.nytimessearch.activities;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -36,6 +36,7 @@ public class WebviewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+        /*
         // Configure related browser settings
         binding.webview.webview.getSettings().setLoadsImagesAutomatically(true);
         binding.webview.webview.getSettings().setJavaScriptEnabled(true);
@@ -44,6 +45,13 @@ public class WebviewActivity extends AppCompatActivity {
         binding.webview.webview.setWebViewClient(new MyBrowser());
         // Load the initial URL
         binding.webview.webview.loadUrl(webUrl);
+*/
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        // set toolbar color and/or setting custom actions before invoking build()
+        // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
+        CustomTabsIntent customTabsIntent = builder.build();
+        // and launch the desired Url with CustomTabsIntent.launchUrl()
+        customTabsIntent.launchUrl(this, Uri.parse(webUrl));
     }
 
     // Manages the behavior when URLs are loaded

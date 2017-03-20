@@ -190,7 +190,6 @@ public class SearchActivity extends AppCompatActivity {
                     //    handler.postDelayed(runnableCode, 500);
                         Toast.makeText(getApplicationContext(),"Please try again in a bit.  Hit NYTime API Limit.",Toast.LENGTH_SHORT).show();
                         // Run the above code block on the main thread after 2 seconds
-                        handler.postDelayed(runnableCode, 300);
 
                     }
                     else {
@@ -208,7 +207,6 @@ public class SearchActivity extends AppCompatActivity {
                 Log.d(TAG, "Search Request Failed: " + t.getMessage());
               //  handler.postDelayed(runnableCode, 500);
                 // Run the above code block on the main thread after 2 seconds
-                handler.postDelayed(runnableCode, 300);
 
             }
         });

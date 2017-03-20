@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.codepath.nytimessearch.R;
 import com.codepath.nytimessearch.models.Doc;
 import com.codepath.nytimessearch.models.Multimedium;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -76,7 +74,13 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         // Get the data model based on position
         Doc article = mArticles.get(position);
         viewHolder.tvTitle.setText(article.getHeadline().getMain().toString());
-        viewHolder.tvSnippet.setText(article.getSnippet().toString());
+        if(!TextUtils.isEmpty(article.getSnippet())) {
+            viewHolder.tvSnippet.setText(article.getSnippet().toString());
+        }
+        else{
+            viewHolder.tvSnippet.setText("");
+        }
+
 
         if(article.getMultimedia().size() > 0) {
             for(Multimedium multimedium:article.getMultimedia()) {

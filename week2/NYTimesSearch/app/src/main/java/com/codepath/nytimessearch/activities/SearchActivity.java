@@ -6,39 +6,30 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.codepath.nytimessearch.R;
-import com.codepath.nytimessearch.adapters.ArticleArrayAdapter;
 import com.codepath.nytimessearch.adapters.ArticlesAdapter;
 import com.codepath.nytimessearch.adapters.EndlessRecyclerViewScrollListener;
 import com.codepath.nytimessearch.adapters.ItemClickSupport;
 import com.codepath.nytimessearch.databinding.ActivitySearchBinding;
 import com.codepath.nytimessearch.fragments.FilterDialogueFragment;
-import com.codepath.nytimessearch.interfaces.EndlessScrollListener;
 import com.codepath.nytimessearch.models.Doc;
 import com.codepath.nytimessearch.models.NYTimesArticleSearchResponse;
+import com.codepath.nytimessearch.networks.NYTimesRequestInterceptor;
 import com.codepath.nytimessearch.networks.NYTimesSearchInterface;
 import com.codepath.nytimessearch.networks.NYTimesService;
-import com.codepath.nytimessearch.networks.NYTimesRequestInterceptor;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -169,6 +160,8 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<NYTimesArticleSearchResponse> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                handler.postDelayed(runnableCode, 2000);
+
             }
         });
         // Run the above code block on the main thread after 2 seconds
@@ -252,19 +245,22 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
 
-        filter = "news_desk:(" + filter + ")";
+        if(filter != null) {
+            filter = "news_desk:(" + filter + ")";
+        }
         int sortByPosition = (int) settings.getLong("SortBy", 0);
 
-        final Calendar c = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        String date = format.format(c.getTime());
+        String beginDate = settings.getString("BeginDate", null);
+        String convertedDate = null;
+        if(beginDate != null && !beginDate.equals("--/--/----")) {
+            final Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+            convertedDate = df.format(new Date(beginDate));
+        }
 
-        String beginDate = settings.getString("BeginDate", date);
         Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
 
         String sortBy = getResources().getStringArray(R.array.sort_array)[sortByPosition];
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-        String convertedDate = df.format(new Date(beginDate));
 
         queryParams = new QuerySearchParams(query, filter, convertedDate, sortBy);
 

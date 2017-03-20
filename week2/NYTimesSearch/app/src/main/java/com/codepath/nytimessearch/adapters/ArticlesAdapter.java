@@ -88,7 +88,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                     String thumbnail = "http://www.nytimes.com/" + multimedium.getUrl();
                     if(!TextUtils.isEmpty(thumbnail)) {
                         //Picasso.with(getContext()).load(thumbnail).into(viewHolder.ivThumbnail);
-                        Glide.with(getContext()).load(thumbnail).into(viewHolder.ivThumbnail);
+                        Glide.with(getContext()).load(thumbnail).centerCrop().error(R.drawable.ic_thumbnial_placeholder).placeholder(R.drawable.ic_thumbnial_placeholder).into(viewHolder.ivThumbnail);
                     }
                 }
             }

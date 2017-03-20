@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,7 +86,8 @@ public class SearchActivity extends AppCompatActivity {
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
 
         setSupportActionBar(this.binding.search.toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("The New York Times");
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(new NYTimesRequestInterceptor());
@@ -184,19 +186,21 @@ public class SearchActivity extends AppCompatActivity {
                         adapter.notifyItemChanged(0);
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Request to retrieve articles failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Request to retrieve articles failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,"Request to retrieve articles failed: " + response.message());
+                    //handler.postDelayed(runnableCode, 500);
                 }
             }
 
             @Override
             public void onFailure(Call<NYTimesArticleSearchResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                handler.postDelayed(runnableCode, 2000);
-
+                //Toast.makeText(getApplicationContext(), "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Search Request Failed: " + t.getMessage());
+              //  handler.postDelayed(runnableCode, 500);
             }
         });
         // Run the above code block on the main thread after 2 seconds
-        handler.postDelayed(runnableCode, 2000);
+        handler.postDelayed(runnableCode, 500);
         // }
         // else {
         //    Toast.makeText(getApplicationContext(), "Not internet detected.  Please try again", Toast.LENGTH_SHORT).show();
@@ -289,8 +293,8 @@ public class SearchActivity extends AppCompatActivity {
             convertedDate = df.format(new Date(beginDate));
         }
 
-        Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Searching " + query + ".");
         String sortBy = getResources().getStringArray(R.array.sort_array)[sortByPosition];
 
         queryParams = new QuerySearchParams(query, filter, convertedDate, sortBy);

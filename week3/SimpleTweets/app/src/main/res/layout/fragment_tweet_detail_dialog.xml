@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.codepath.simpletweets.fragments.TweetDetailDialogFragment">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/toolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </android.support.design.widget.AppBarLayout>
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/blue_twitter_icon"
+        android:layout_below="@+id/toolbarLayout"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:id="@+id/ivProfilePic" />
+
+    <TextView
+        android:text="The Seattle Times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivProfilePic"
+        android:layout_toRightOf="@+id/ivProfilePic"
+        android:layout_toEndOf="@+id/ivProfilePic"
+        android:layout_marginLeft="26dp"
+        android:layout_marginStart="26dp"
+        android:id="@+id/tvName"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="\@wsdot_traffic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvScreenName"
+        android:layout_below="@+id/tvName"
+        android:layout_alignLeft="@+id/tvName" />
+
+    <TextView
+        android:text="On the SR 520 eastbound on-ramp from I-5 south there is a collision partially blocking the ramp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvScreenName"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/tvText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:text="9:29 AM Mar 26, 2017"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvText"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/tvCreationTime" />
+    <TextView
+        android:text="13 RETWEETS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCreationTime"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/tvRetweetCount" />
+
+    <TextView
+        android:text="30 LIKES"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/tvCreationTime"
+        android:layout_toRightOf="@+id/tvRetweetCount"
+        android:id="@+id/tvLikes" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLikes"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="50dp"
+        android:gravity="center_horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/twitter_reply"
+            android:id="@+id/tvReply" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_retweet"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_toRightOf="@+id/tvReply"
+            android:id="@+id/tvRetweet" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/favorite_black"
+            android:layout_toRightOf="@+id/tvRetweet"
+            android:id="@+id/tvFav" />
+    </RelativeLayout>
+
+</RelativeLayout>

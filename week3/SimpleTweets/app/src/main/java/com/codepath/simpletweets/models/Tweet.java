@@ -39,6 +39,9 @@ public class Tweet extends BaseModel {
     public int retweetCount;
 
     @Column
+    public int favoriteCount;
+
+    @Column
     @ForeignKey(saveForeignKeyModel = true)
     public User user;
 
@@ -54,6 +57,7 @@ public class Tweet extends BaseModel {
             Boolean favorited = jsonObject.getBoolean("favorited");
             String text = jsonObject.getString("text");
             int retweetCount = jsonObject.getInt("retweet_count");
+            int favoriteCount = jsonObject.getInt("favorite_count");
             JSONObject userObject = jsonObject.getJSONObject("user");
             User user = User.fromJSON(userObject);
             tweet = new Tweet();
@@ -62,6 +66,7 @@ public class Tweet extends BaseModel {
             tweet.favorited = favorited;
             tweet.text = text;
             tweet.retweetCount = retweetCount;
+            tweet.favoriteCount = favoriteCount;
             tweet.user = user;
 
         } catch (JSONException e) {

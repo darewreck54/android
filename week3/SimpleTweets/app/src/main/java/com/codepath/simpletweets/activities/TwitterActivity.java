@@ -1,19 +1,30 @@
 package com.codepath.simpletweets.activities;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.simpletweets.R;
 import com.codepath.simpletweets.adapters.EndlessRecyclerViewScrollListener;
+import com.codepath.simpletweets.adapters.ItemClickSupport;
 import com.codepath.simpletweets.adapters.TwitterRecycleAdapter;
+import com.codepath.simpletweets.data.SimpleTweetsDb;
 import com.codepath.simpletweets.data.TweetDbFlowAdapter;
 import com.codepath.simpletweets.fragments.ComposeTweetDialogFragment;
+import com.codepath.simpletweets.fragments.TweetDetailFragment;
 import com.codepath.simpletweets.models.Tweet;
 import com.codepath.simpletweets.networks.TwitterClient;
 import com.codepath.simpletweets.utils.NetworkConnectionUtil;
@@ -58,6 +69,7 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
 
         ButterKnife.bind(this);
 
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setIcon(R.drawable.twitter_white);
@@ -76,10 +88,10 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                populateTimelineAsync(null,null,MAX_TWEET_COUNT, true);
+            // Your code to refresh the list here.
+            // Make sure you call swipeContainer.setRefreshing(false)
+            // once the network request has completed successfully.
+            populateTimelineAsync(null,null,MAX_TWEET_COUNT, true);
             }
         });
 
@@ -88,7 +100,7 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-
+                Toast.makeText(getApplicationContext(),"Clicked", Toast.LENGTH_SHORT).show();
                 //populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
             }
         };
@@ -99,6 +111,7 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        getApplicationContext().deleteDatabase(SimpleTweetsDb.NAME);
 
         init();
 
@@ -106,6 +119,18 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
         if(isFromShareIntent) {
             onComposeTweetClick();
         }
+
+        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Tweet tweet = tweets.get(position);
+                        FragmentManager fm = getSupportFragmentManager();
+                        TweetDetailFragment fragment = TweetDetailFragment.newInstance(tweet);
+                        fragment.show(fm, "fragment_tweet_detail");
+                    }
+                }
+        );
 
     }
 

@@ -1,6 +1,8 @@
 package com.codepath.simpletweets.fragments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -26,6 +28,7 @@ import com.codepath.simpletweets.models.Tweet;
 import com.codepath.simpletweets.networks.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import butterknife.BindView;
@@ -163,7 +166,12 @@ public class ComposeTweetDialogFragment extends DialogFragment {
                     Tweet tweet = Tweet.fromJSON(response);
                     ComposeTweetDialogFragmentListener listener = (ComposeTweetDialogFragmentListener) getActivity();
                     listener.onFinishCompose(tweet);
-                    // Close the dialog and return back to the parent activity
+
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences.Editor edit = pref.edit();
+                    edit.remove("composeTweet");
+                    edit.commit();
+
                     dismiss();
                 }
 
@@ -172,6 +180,9 @@ public class ComposeTweetDialogFragment extends DialogFragment {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                     Log.e(TAG, "Twitter UpdateStatus Failed!");
                     Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                    if(statusCode == 403) {
+                        Toast.makeText(getContext(), "Cannot tweet the same status.  Please type something new.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }

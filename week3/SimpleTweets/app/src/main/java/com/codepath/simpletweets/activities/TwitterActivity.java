@@ -100,8 +100,13 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-
         init();
+
+        boolean isFromShareIntent = getIntent().getBooleanExtra("fromReceiveIntent", false);
+        if(isFromShareIntent) {
+            onComposeTweetClick();
+        }
+
     }
 
     public void init(){

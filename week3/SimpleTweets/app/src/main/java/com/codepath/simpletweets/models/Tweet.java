@@ -1,6 +1,6 @@
 package com.codepath.simpletweets.models;
 
-import com.codepath.simpletweets.SimpleTweetsDb;
+import com.codepath.simpletweets.data.SimpleTweetsDb;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -14,8 +14,6 @@ import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.name;
 
 /**
  * Created by darewreck_PC on 3/26/2017.
@@ -58,13 +56,14 @@ public class Tweet extends BaseModel {
             int retweetCount = jsonObject.getInt("retweet_count");
             JSONObject userObject = jsonObject.getJSONObject("user");
             User user = User.fromJSON(userObject);
-
+            tweet = new Tweet();
             tweet.id = id;
             tweet.createdAt = createdAt;
             tweet.favorited = favorited;
             tweet.text = text;
             tweet.retweetCount = retweetCount;
             tweet.user = user;
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

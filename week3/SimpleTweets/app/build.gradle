@@ -18,14 +18,11 @@ android {
         }
     }
 }
-
 repositories {
     jcenter()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
-
 def dbflow_version = "4.0.0-beta5"
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

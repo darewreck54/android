@@ -2,10 +2,15 @@ package com.codepath.simpletweets.fragments;
 
 import java.util.ArrayList;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -83,7 +88,11 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.fragment_compose_tweet_dialog, container, false);
         ButterKnife.bind(this, view);
-
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(pref.contains("composeTweet")) {
+            String storedTweet = pref.getString("composeTweet", "");
+            etStatus.setText(storedTweet);
+        }
         /*
         String profilePicImage = savedInstanceState.getString("profilePicImage");
         Glide.with(getContext()).load(profilePicImage).fitCenter()
@@ -96,7 +105,43 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 
     @OnClick(R.id.ivClose)
     public void close() {
-        dismiss();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this.getContext());
+
+        // set title
+        alertDialogBuilder.setTitle("Your Title");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Do you wish to save the tweet for later use?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        SharedPreferences.Editor edit = pref.edit();
+                        edit.putString("composeTweet", etStatus.getText().toString());
+                        edit.commit();
+                        dismiss();
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        SharedPreferences.Editor edit = pref.edit();
+                        edit.remove("composeTweet");
+                        edit.commit();
+                        dismiss();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
     }
 
     @OnTextChanged(R.id.etStatus)

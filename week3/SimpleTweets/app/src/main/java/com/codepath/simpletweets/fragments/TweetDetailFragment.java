@@ -1,31 +1,40 @@
 package com.codepath.simpletweets.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.simpletweets.R;
 import com.codepath.simpletweets.activities.LoginActivity;
 import com.codepath.simpletweets.activities.TwitterActivity;
 import com.codepath.simpletweets.models.Tweet;
+import com.codepath.simpletweets.networks.TwitterClient;
 import com.codepath.simpletweets.utils.ParseRelativeDate;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +68,10 @@ public class TweetDetailFragment extends DialogFragment {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    private TwitterClient twitterClient;
+
+    private Tweet tweet;
+
     public TweetDetailFragment() {
         // Required empty public constructor
     }
@@ -81,13 +94,13 @@ public class TweetDetailFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        twitterClient = new TwitterClient(getActivity().getApplicationContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final Tweet tweet = (Tweet) Parcels.unwrap( getArguments().getParcelable("tweet"));
-
+        tweet = (Tweet) Parcels.unwrap( getArguments().getParcelable("tweet"));
         View view =  inflater.inflate(R.layout.fragment_tweet_detail_dialog, container, false);
         ButterKnife.bind(this, view);
 
@@ -118,7 +131,45 @@ public class TweetDetailFragment extends DialogFragment {
 
     @OnClick(R.id.tvRetweet)
     public void onRetweetClick() {
+        twitterClient.retweet(tweet.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getContext(), "Tweet retweeted!", Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
 
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.d("Failed: ", ""+statusCode);
+                Log.d("Error : ", "" + throwable);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                super.onSuccess(statusCode, headers, responseString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                if(statusCode == 403) {
+                    Toast.makeText(getContext(), "Cannot tweet the same status.  Please type something new.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
     @OnClick(R.id.tvFav)

@@ -91,4 +91,12 @@ public class TwitterClient extends OAuthBaseClient {
         }
         client.get(apiUrl, params, handler);
     }
+
+    public void retweet(Long retweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/retweet/"+ retweetId+".json");
+        RequestParams params = new RequestParams();
+        params.put("format", "json");
+
+        client.post(apiUrl, params, handler);
+    }
 }

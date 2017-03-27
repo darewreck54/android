@@ -68,6 +68,9 @@ public class TweetDetailFragment extends DialogFragment {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.ivTextImage)
+    ImageView ivTextImage;
+
     private TwitterClient twitterClient;
 
     private Tweet tweet;
@@ -121,6 +124,13 @@ public class TweetDetailFragment extends DialogFragment {
                 .placeholder(R.drawable.blue_twitter_icon)
                 .into(ivProfilePic);
 
+        if(tweet.entity != null && tweet.entity.media != null && tweet.entity.media != null) {
+
+            Glide.with(getContext()).load( tweet.entity.media.mediaUrl).fitCenter()
+                    .error(R.drawable.blue_twitter_icon)
+                    .placeholder(R.drawable.blue_twitter_icon)
+                    .into(ivTextImage);
+        }
         return view;
     }
 

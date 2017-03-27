@@ -56,15 +56,26 @@
         android:layout_below="@+id/tvScreenName"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/tvText"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/tvText"
+        android:id="@+id/ivTextImage" />
+
     <TextView
         android:text="9:29 AM Mar 26, 2017"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvText"
+        android:layout_below="@+id/ivTextImage"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
@@ -91,8 +102,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvLikes"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center_horizontal"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">

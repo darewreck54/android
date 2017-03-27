@@ -1,6 +1,7 @@
 package com.codepath.simpletweets.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.simpletweets.R;
@@ -56,8 +58,11 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.ivTextImage)
         ImageView ivTextImage;
 
-      //  @BindView(R.id.video_player)
-        //VideoPlayerView videoPlayerView;
+        @BindView(R.id.videoView)
+        VideoView videoView;
+
+  //      @BindView(R.id.video_player)
+//        VideoPlayerView videoPlayerView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -98,6 +103,7 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 && tweet.extendedEntity.media.videoInfo.variant != null
                 && tweet.extendedEntity.media.videoInfo.variant.url != null) {
             if (tweet.extendedEntity.media.type.equals("video")) {
+
                 /*
                 viewHolder.videoPlayerView.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                     @Override
@@ -119,7 +125,13 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
                 */
-              //  mVideoPlayerManager.playNewVideo(null, viewHolder.videoPlayerView, tweet.extendedEntity.media.videoInfo.variant.url);
+
+               // viewHolder.videoPlayerView.setVisibility(View.VISIBLE);
+                //mVideoPlayerManager.playNewVideo(null, viewHolder.videoPlayerView, tweet.extendedEntity.media.videoInfo.variant.url);
+                Uri uri =  Uri.parse( tweet.extendedEntity.media.videoInfo.variant.url );
+                viewHolder.videoView.setVideoURI(uri);
+                viewHolder.videoView.start();
+                viewHolder.videoView.setVisibility(View.VISIBLE);
                 /*
                 viewHolder.mVideoCover.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -128,13 +140,13 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
             */
+                //viewHolder.ivTextImage.setVisibility(View.GONE);
             } else {
                 Log.d(TAG, "Not support type: " + tweet.entity.media.type);
             }
-
-
         } else {
             viewHolder.ivTextImage.setVisibility(View.GONE);
+           // viewHolder.videoPlayerView.setVisibility(View.GONE);
         }
 
         if (tweet.entity != null && tweet.entity.media != null) {

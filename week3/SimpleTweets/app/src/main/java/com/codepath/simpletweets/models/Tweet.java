@@ -45,6 +45,14 @@ public class Tweet extends BaseModel {
     @ForeignKey(saveForeignKeyModel = true)
     public User user;
 
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    public Entity entity;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    public Entity extendedEntity;
+
     public Tweet(){
 
     }
@@ -68,7 +76,10 @@ public class Tweet extends BaseModel {
             tweet.retweetCount = retweetCount;
             tweet.favoriteCount = favoriteCount;
             tweet.user = user;
-
+            tweet.entity = Entity.fromJSON(jsonObject.getJSONObject("entities"));
+            if(jsonObject.has("extended_entities")) {
+                tweet.extendedEntity = Entity.fromJSON(jsonObject.getJSONObject("extended_entities"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

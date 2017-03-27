@@ -30,6 +30,8 @@ import com.codepath.simpletweets.networks.TwitterClient;
 import com.codepath.simpletweets.utils.NetworkConnectionUtil;
 import com.google.common.collect.Lists;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,7 +46,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class TwitterActivity extends AppCompatActivity implements ComposeTweetDialogFragment.ComposeTweetDialogFragmentListener {
     private static final String TAG = TwitterActivity.class.getName();
-    private static final long MAX_TWEET_COUNT = 25;
+    private static final long MAX_TWEET_COUNT = 10;
     private TwitterClient twitterClient;
 
     @BindView(R.id.toolbar)
@@ -79,7 +81,7 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
 
         rvTweets.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(true);
+       // layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         rvTweets.setLayoutManager(layoutManager);
 
@@ -100,8 +102,7 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                Toast.makeText(getApplicationContext(),"Clicked", Toast.LENGTH_SHORT).show();
-                //populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
+                populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -161,8 +162,8 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
                     List<Tweet> tweetsR = Tweet.fromJSONArray(response);
                     for(Tweet tweet:tweetsR){
                         TweetDbFlowAdapter.addTweet(tweet);
-                        tweets.add(0, tweet);
-                        adapter.notifyItemChanged(0);
+                        tweets.add(tweet);
+                        adapter.notifyItemChanged(tweets.size()-1);
                         minTweetId = Math.min(minTweetId, tweet.id);
                     }
 
@@ -175,7 +176,13 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                     swipeRefreshLayout.setRefreshing(false);
-                    Toast.makeText(getApplicationContext(),"Request to retreive Tweets failed.  Please try again.", Toast.LENGTH_SHORT).show();
+                    if(statusCode == 429) {
+                        Toast.makeText(getApplicationContext(),"Rate limit exceeded for the Twitter API.  Please try again in a couple minutes.", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(),"Request to retreive Tweets failed.  Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         } else {
@@ -193,8 +200,10 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
 
     @Override
     public void onFinishCompose(Tweet tweet) {
-        tweets.add(tweets.size()-1, tweet);
-        adapter.notifyItemChanged(tweets.size()-1);
-        layoutManager.scrollToPosition(tweets.size()-1);
+     //   int index = tweets.size();
+      //  index = (index == 0) ? 0: index-1;
+        tweets.add(0, tweet);
+        adapter.notifyItemChanged(0);
+        layoutManager.scrollToPosition(0);
     }
 }

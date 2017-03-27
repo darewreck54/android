@@ -21,7 +21,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
 
-        android:layout_toRightOf="@+id/ivProfileImg">
+        android:layout_toRightOf="@+id/ivProfileImg"
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:text="Golden State"
@@ -58,6 +59,27 @@
             android:linksClickable="true"
             android:id="@+id/tvText" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/blue_twitter_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/tvText"
+            android:id="@+id/ivTextImage" />
+<!--
+        <com.volokh.danylo.video_player_manager.ui.VideoPlayerView
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/ivTextImage"
+            android:layout_weight="1"/>
+-->
     </RelativeLayout>
 
 </RelativeLayout>

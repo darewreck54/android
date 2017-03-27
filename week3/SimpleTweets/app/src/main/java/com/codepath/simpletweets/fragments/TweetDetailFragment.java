@@ -130,7 +130,12 @@ public class TweetDetailFragment extends DialogFragment {
                     .error(R.drawable.blue_twitter_icon)
                     .placeholder(R.drawable.blue_twitter_icon)
                     .into(ivTextImage);
+
+            ivTextImage.setVisibility(View.VISIBLE);
+        } else {
+            ivTextImage.setVisibility(View.GONE);
         }
+
         return view;
     }
 

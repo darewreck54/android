@@ -111,9 +111,6 @@ public class ComposeTweetDialogFragment extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this.getContext());
 
-        // set title
-        alertDialogBuilder.setTitle("Your Title");
-
         // set dialog message
         alertDialogBuilder
                 .setMessage("Do you wish to save the tweet for later use?")

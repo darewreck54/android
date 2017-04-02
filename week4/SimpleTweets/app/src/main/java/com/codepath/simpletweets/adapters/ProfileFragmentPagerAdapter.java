@@ -50,4 +50,3 @@ public class ProfileFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabTitles[position];
     }
 }
- 

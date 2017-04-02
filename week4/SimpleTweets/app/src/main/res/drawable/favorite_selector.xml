@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/favorite_black" android:state_checked="false" />
+    <item android:drawable="@drawable/favorite_black_dark" android:state_checked="true" />
+</selector>

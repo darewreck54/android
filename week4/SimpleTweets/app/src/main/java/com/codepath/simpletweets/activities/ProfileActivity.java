@@ -1,5 +1,7 @@
 package com.codepath.simpletweets.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
@@ -26,11 +28,17 @@ import com.codepath.simpletweets.models.User;
 import com.codepath.simpletweets.networks.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -112,6 +120,66 @@ public class ProfileActivity extends AppCompatActivity {
             tabsStrip.setViewPager(vpPager);
         }
 
+    }
+
+    @OnClick(R.id.tvFollowsCount)
+    public void getFollowesCount() {
+        final Activity _activity = this;
+        twitterClient.getFollowers( user.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONArray idJsonArray = response.getJSONArray("ids");
+                    ArrayList<String> ids = new ArrayList<>();
+                    for(int i = 0; i < idJsonArray.length(); i++) {
+                        ids.add(String.valueOf(idJsonArray.getLong(i)));
+                    }
+
+                    Intent intent = new Intent(_activity, UserListActivity.class);
+                    intent.putStringArrayListExtra("userIds", ids);
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+
+
+    @OnClick(R.id.tvFollowingsCount)
+    public void getFollowingsCount() {
+        final Activity _activity = this;
+        twitterClient.getFavorites( user.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONArray idJsonArray = response.getJSONArray("ids");
+                    ArrayList<String> ids = new ArrayList<>();
+                    for(int i = 0; i < idJsonArray.length(); i++) {
+                        ids.add(String.valueOf(idJsonArray.getLong(i)));
+                    }
+
+                    Intent intent = new Intent(_activity, UserListActivity.class);
+                    intent.putStringArrayListExtra("userIds", ids);
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
     private void populateProfileHeader(User user) {

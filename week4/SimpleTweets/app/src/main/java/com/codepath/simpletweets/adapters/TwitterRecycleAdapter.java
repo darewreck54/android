@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,7 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final String TAG = TwitterRecycleAdapter.class.getName();
  //   private Tweet tweet;
     private static TwitterClient twitterClient;
+    private ViewHolder viewHolder;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvName)
@@ -77,7 +79,7 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         VideoView videoView;
 
         @BindView(R.id.ibFav)
-        ImageButton ibFav;
+        ToggleButton tbFavorite;
 
         @BindView(R.id.ibReply)
         ImageButton ibReply;
@@ -113,7 +115,12 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final Tweet tweet = mTweets.get(position);
-        final ViewHolder viewHolder = (ViewHolder) holder;
+        viewHolder = (ViewHolder) holder;
+        if(tweet.favorited) {
+            viewHolder.tbFavorite.setChecked(true);
+        } else {
+            viewHolder.tbFavorite.setChecked(false);
+        }
         viewHolder.tvMessage.setText(tweet.text);
         viewHolder.tvUserName.setText(tweet.user.name);
         viewHolder.tvUserScreenName.setText("@" + tweet.user.screenName);
@@ -123,10 +130,10 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 .placeholder(R.drawable.blue_twitter_icon)
                 .into(viewHolder.ivProfileIcon);
 
-        viewHolder.ibFav.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tbFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFavClick();
+                onFavClick(tweet);
             }
         });
 
@@ -274,8 +281,49 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         });
     }
 
-    public void onFavClick() {
-        Toast.makeText(getContext(), "Tweet fav!", Toast.LENGTH_SHORT).show();
+    public void onFavClick(Tweet tweet) {
+        if(viewHolder.tbFavorite.isChecked()) {
+            twitterClient.unsaveFavorite(tweet.id, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Toast.makeText(getContext(), "Unfavourite", Toast.LENGTH_SHORT).show();
+                    viewHolder.tbFavorite.setChecked(false);
+                }
 
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                    //Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                    if(statusCode == 403) {
+                        TwitterError error = TwitterError.fromJSON(errorResponse);
+                        Toast.makeText(getContext(), error.message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            twitterClient.saveFavorite(tweet.id, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Toast.makeText(getContext(), "favourite", Toast.LENGTH_SHORT).show();
+                    viewHolder.tbFavorite.setChecked(true);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                    //Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                    if(statusCode == 403) {
+                        TwitterError error = TwitterError.fromJSON(errorResponse);
+                        Toast.makeText(getContext(), error.message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }

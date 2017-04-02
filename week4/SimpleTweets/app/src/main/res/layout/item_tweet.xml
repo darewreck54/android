@@ -116,11 +116,12 @@
             android:layout_toRightOf="@+id/ibReply"
             android:id="@+id/ibRetweet" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:srcCompat="@drawable/favorite_black"
+        <ToggleButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/favorite_selector"
+            android:textOn=""
+            android:textOff=""
             android:layout_toRightOf="@+id/ibRetweet"
             android:id="@+id/ibFav" />
     </RelativeLayout>

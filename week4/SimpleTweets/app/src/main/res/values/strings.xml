@@ -11,4 +11,5 @@
     <string name="action_compose">Compose</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_user_list">UserListActivity</string>
 </resources>

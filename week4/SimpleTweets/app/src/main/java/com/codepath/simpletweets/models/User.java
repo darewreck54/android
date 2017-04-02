@@ -66,11 +66,11 @@ public class User extends BaseModel {
             long id = jsonObject.getLong("id");
             String name = jsonObject.getString("name");
             String screenName = jsonObject.getString("screen_name");
-            String profileBackgroundImageUrl = jsonObject.getString("profile_banner_url");
+            String profileBackgroundImageUrl =  jsonObject.has("profile_banner_url") ? jsonObject.getString("profile_banner_url"):null;
             String profileImageUrl = jsonObject.getString("profile_image_url");
             String location = jsonObject.getString("location");
             int friendsCount = jsonObject.getInt("friends_count");
-            String description = jsonObject.getString("description");
+            String description = jsonObject.has("description") ? jsonObject.getString("description"):"";
             int followersCount = jsonObject.getInt("followers_count");
             int followingsCount = jsonObject.getInt("followers_count");
 
@@ -98,7 +98,9 @@ public class User extends BaseModel {
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
                 User user = User.fromJSON(jsonArray.getJSONObject(i));
-                users.add(user);
+                if(user != null) {
+                    users.add(user);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 continue;

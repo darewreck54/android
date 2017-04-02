@@ -5,10 +5,14 @@ import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
+import android.databinding.tool.util.StringUtils;
+import android.text.TextUtils;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import java.util.List;
 
 /*
  *
@@ -146,5 +150,46 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(apiUrl, params, handler);
     }
 
+    public void saveFavorite( long userId,  AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/create.json");
+        RequestParams params = new RequestParams();
+        params.put("format", "json");
+        params.put("id", userId);
+        client.post(apiUrl, params, handler);
+    }
+    public void unsaveFavorite( long userId,  AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/destroy.json");
+        RequestParams params = new RequestParams();
+        params.put("format", "json");
+        params.put("id", userId);
+        client.post(apiUrl, params, handler);
+    }
 
+    public void getFollowers(long userId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/ids.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("format", "json");
+        params.put("user_id", userId);
+        client.get(apiUrl, params, handler);
+    }
+
+    public void lookupUser(List<String> userIds, AsyncHttpResponseHandler handler ) {
+        String apiUrl = getApiUrl("users/lookup.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("format", "json");
+        String stringUserIds =  TextUtils.join(",", userIds);
+        params.put("user_id",stringUserIds);
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getFavorites(long userId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friends/ids.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("format", "json");
+        params.put("user_id", userId);
+        client.get(apiUrl, params, handler);
+    }
 }

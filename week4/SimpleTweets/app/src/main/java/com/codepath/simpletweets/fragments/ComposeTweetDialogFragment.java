@@ -25,11 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.codepath.simpletweets.R;
 import com.codepath.simpletweets.models.Tweet;
+import com.codepath.simpletweets.models.TwitterError;
 import com.codepath.simpletweets.networks.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,9 +58,11 @@ public class ComposeTweetDialogFragment extends DialogFragment {
     private TwitterClient twitterClient;
     private static final String TAG = ComposeTweetDialogFragment.class.getName();
     private static int MAX_CHARACTERS_TWEET = 140;
+    private Boolean isReply;
+    private Tweet tweet;
 
     public ComposeTweetDialogFragment() {
-
+        isReply = null;
     }
 
     public interface ComposeTweetDialogFragmentListener {
@@ -71,11 +75,12 @@ public class ComposeTweetDialogFragment extends DialogFragment {
      *
      * @return A new instance of fragment ComposeTweetDialogFragment.
      */
-    public static ComposeTweetDialogFragment newInstance(String profilePicImg) {
+    public static ComposeTweetDialogFragment newInstance(boolean isReply, Tweet tweet) {
         ComposeTweetDialogFragment fragment = new ComposeTweetDialogFragment();
         Bundle args = new Bundle();
-        //args.putString("profilePicImage", profilePicImg);
-        //fragment.setArguments(args);
+        args.putBoolean("isReply", isReply);
+        args.putParcelable("tweet", Parcels.wrap(tweet));
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -91,10 +96,19 @@ public class ComposeTweetDialogFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.fragment_compose_tweet_dialog, container, false);
         ButterKnife.bind(this, view);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(pref.contains("composeTweet")) {
-            String storedTweet = pref.getString("composeTweet", "");
-            etStatus.setText(storedTweet);
+
+        isReply = getArguments().getBoolean("isReply");
+
+        if(isReply) {
+            tweet = (Tweet) Parcels.unwrap(getArguments().getParcelable("tweet"));
+            etStatus.setText("@" + tweet.user.screenName);
+        } else {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            if(pref.contains("composeTweet")) {
+                String storedTweet = pref.getString("composeTweet", "");
+                etStatus.setText(storedTweet);
+            }
+
         }
         /*
         String profilePicImage = savedInstanceState.getString("profilePicImage");
@@ -156,7 +170,11 @@ public class ComposeTweetDialogFragment extends DialogFragment {
         {
             Toast.makeText(getContext(), "Tweets can only be " + MAX_CHARACTERS_TWEET + " characters long.  Please try againt", Toast.LENGTH_SHORT).show();
         } else {
-            twitterClient.updateStatus(message, null, new JsonHttpResponseHandler() {
+            Long replyTweetId = null;
+            if(isReply) {
+                replyTweetId = tweet.id;
+            }
+            twitterClient.updateStatus(message, replyTweetId, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Toast.makeText(getContext(), "Tweet sent", Toast.LENGTH_SHORT).show();
@@ -176,9 +194,16 @@ public class ComposeTweetDialogFragment extends DialogFragment {
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                     Log.e(TAG, "Twitter UpdateStatus Failed!");
-                    Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
-                    if(statusCode == 403) {
-                        Toast.makeText(getContext(), "Cannot tweet the same status.  Please type something new.", Toast.LENGTH_SHORT).show();
+
+                    if(statusCode == 429) {
+                        //Toast.makeText(getContext(),"Rate limit exceeded for the Twitter API.  Please try again in a couple minutes.", Toast.LENGTH_SHORT).show();
+                        TwitterError error = TwitterError.fromJSON(errorResponse);
+                        Toast.makeText(getContext(), error.message, Toast.LENGTH_SHORT).show();
+                    } else   if(statusCode == 403) {
+                        TwitterError error = TwitterError.fromJSON(errorResponse);
+                        Toast.makeText(getContext(), error.message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

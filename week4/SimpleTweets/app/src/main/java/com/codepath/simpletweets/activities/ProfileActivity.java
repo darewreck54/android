@@ -23,6 +23,7 @@ import com.codepath.simpletweets.networks.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,21 +70,26 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         twitterClient = TwitterApplication.getRestClient();
-        twitterClient.getUserInfo( new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                getSupportActionBar().setTitle("@" + user.screenName);
-                populateProfileHeader(user);
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
+        if(getIntent().getParcelableExtra("user") == null) {
+            twitterClient.getUserInfo( new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    user = User.fromJSON(response);
+                    populateProfileHeader(user);
+                }
 
-        String screenName = getIntent().getStringExtra("screen_name");
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+            });
+        } else {
+            user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
+            populateProfileHeader(user);
+        }
+
+        String screenName = (user == null) ? getIntent().getStringExtra("screen_name"):user.screenName;
         if(savedInstanceState == null) {
             UserTimelineFragment fragmentTimeline = UserTimelineFragment.newInstance(screenName);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

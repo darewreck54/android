@@ -1,13 +1,16 @@
 package com.codepath.simpletweets.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +24,21 @@ import com.codepath.simpletweets.adapters.TwitterRecycleAdapter;
 import com.codepath.simpletweets.data.SimpleTweetsDb;
 import com.codepath.simpletweets.data.TweetDbFlowAdapter;
 import com.codepath.simpletweets.models.Tweet;
+import com.codepath.simpletweets.networks.TwitterClient;
 import com.codepath.simpletweets.utils.NetworkConnectionUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by darewreck_PC on 3/31/2017.
@@ -46,6 +57,8 @@ public class TweetsListFragment extends Fragment {
     protected LinearLayoutManager layoutManager;
     protected Long minTweetId = Long.MAX_VALUE;
     private static final long MAX_TWEET_COUNT = 10;
+    protected ProgressDialog pd;
+    protected TwitterClient twitterClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +75,11 @@ public class TweetsListFragment extends Fragment {
             //    populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
             }
         };
-
+        twitterClient = new TwitterClient(getActivity());
+        pd = new ProgressDialog(getContext());
+        pd.setTitle("Loading...");
+        pd.setMessage("Please wait.");
+        pd.setCancelable(false);
     }
 
     protected void populateList(Long since_id, Long max_id, Long count, final boolean isRefresh) {
@@ -127,11 +144,9 @@ public class TweetsListFragment extends Fragment {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Tweet tweet = tweets.get(position);
-
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        intent.putExtra("user", Parcels.wrap(tweet.user));
                         startActivity(intent);
-                        //Toast.makeText(getContext(), "Item Clicked", Toast.LENGTH_SHORT).show();
-
                     }
                 }
         );
@@ -160,4 +175,6 @@ public class TweetsListFragment extends Fragment {
     public void refreshComplete() {
         swipeRefreshLayout.setRefreshing(false);
     }
+
+
 }

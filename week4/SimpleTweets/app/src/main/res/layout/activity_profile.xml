@@ -25,7 +25,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="270dp"
         android:layout_below="@+id/appToolbar"
         android:background="@drawable/header_border"
         android:id="@+id/rlUserHeader">
@@ -59,7 +59,7 @@
             android:layout_below="@+id/ivBackgroundImg"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:id="@+id/tvName"
             android:textStyle="normal|bold" />
 

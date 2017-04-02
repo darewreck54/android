@@ -2,21 +2,30 @@ package com.codepath.simpletweets.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.simpletweets.R;
+import com.codepath.simpletweets.TwitterApplication;
 import com.codepath.simpletweets.data.SimpleTweetsDb;
 import com.codepath.simpletweets.data.TweetDbFlowAdapter;
+import com.codepath.simpletweets.fragments.ComposeTweetDialogFragment;
 import com.codepath.simpletweets.models.Tweet;
+import com.codepath.simpletweets.models.TwitterError;
+import com.codepath.simpletweets.networks.TwitterClient;
 import com.codepath.simpletweets.utils.ParseRelativeDate;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
@@ -24,11 +33,15 @@ import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by darewreck_PC on 3/26/2017.
@@ -39,6 +52,8 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context mContext;
     private LayoutInflater inflater;
     private static final String TAG = TwitterRecycleAdapter.class.getName();
+ //   private Tweet tweet;
+    private static TwitterClient twitterClient;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvName)
@@ -61,6 +76,15 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.videoView)
         VideoView videoView;
 
+        @BindView(R.id.ibFav)
+        ImageButton ibFav;
+
+        @BindView(R.id.ibReply)
+        ImageButton ibReply;
+
+        @BindView(R.id.ibRetweet)
+        ImageButton ibRetweet;
+
   //      @BindView(R.id.video_player)
 //        VideoPlayerView videoPlayerView;
 
@@ -68,6 +92,7 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
     }
 
     public TwitterRecycleAdapter(Context context, List<Tweet> tweets) {
@@ -81,6 +106,7 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_tweet, parent, false);
         RecyclerView.ViewHolder viewHolder = new ViewHolder(view);
+        twitterClient = TwitterApplication.getRestClient();
         return viewHolder;
     }
 
@@ -96,6 +122,28 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 .error(R.drawable.blue_twitter_icon)
                 .placeholder(R.drawable.blue_twitter_icon)
                 .into(viewHolder.ivProfileIcon);
+
+        viewHolder.ibFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFavClick();
+            }
+        });
+
+        viewHolder.ibReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onReplyClick(tweet);
+            }
+        });
+
+        viewHolder.ibRetweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRetweetClick(tweet);
+            }
+        });
+
 
         if (tweet.extendedEntity != null
                 && tweet.extendedEntity.media != null
@@ -195,5 +243,39 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void addAll(List<Tweet> list) {
         mTweets.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public void onReplyClick(Tweet tweet){
+        FragmentManager fm =  ((FragmentActivity)mContext).getSupportFragmentManager();
+        ComposeTweetDialogFragment fragment = ComposeTweetDialogFragment.newInstance(true, tweet);
+        fragment.show(fm, "fragment_compose");
+    }
+
+    public void onRetweetClick(Tweet tweet) {
+
+        twitterClient.retweet(tweet.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getContext(), "Tweet retweeted!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                //Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                if(statusCode == 403) {
+                    TwitterError error = TwitterError.fromJSON(errorResponse);
+                    Toast.makeText(getContext(), error.message, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Twitter UpdateStatus Failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void onFavClick() {
+        Toast.makeText(getContext(), "Tweet fav!", Toast.LENGTH_SHORT).show();
+
     }
 }

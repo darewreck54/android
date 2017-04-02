@@ -56,15 +56,18 @@ public class UserTimelineFragment extends TweetsListFragment {
     @Override
     protected void populateList(Long since_id, Long max_id, Long count, final boolean isRefresh) {
         if (NetworkConnectionUtil.isInternetAvailable(getActivity())) {
+            pd.show();
             client.getUserTimeline(screenName, since_id, max_id, count, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    pd.dismiss();
                     List<Tweet> tweetsR = Tweet.fromJSONArray(response);
                     addAll(tweetsR, isRefresh);
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    pd.dismiss();
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                     refreshComplete();
                     if (statusCode == 429) {

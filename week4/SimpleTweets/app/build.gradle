@@ -51,8 +51,8 @@ dependencies {
     // AnimatedVectorDrawableCompat
     compile "com.android.support:transition:${supportLibVersion}"
     compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.loopj.android:android-async-http:1.4.9'

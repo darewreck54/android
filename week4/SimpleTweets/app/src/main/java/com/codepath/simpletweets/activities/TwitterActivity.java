@@ -1,6 +1,7 @@
 package com.codepath.simpletweets.activities;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,7 +56,7 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_compose: {
-
+                onComposeTweetClick();
                 return true;
             }
             case R.id.action_user: {
@@ -68,15 +69,12 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
             }
         }
     }
-    /*
 
-    @OnClick(R.id.floatingActionBar)
     public void onComposeTweetClick(){
         FragmentManager fm = getSupportFragmentManager();
-        ComposeTweetDialogFragment fragment = ComposeTweetDialogFragment.newInstance(null);
+        ComposeTweetDialogFragment fragment = ComposeTweetDialogFragment.newInstance(false, null);
         fragment.show(fm, "fragment_compose");
     }
-    */
 
     @Override
     public void onFinishCompose(Tweet tweet) {

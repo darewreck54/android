@@ -63,23 +63,17 @@ public class TweetsListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tweets = new ArrayList<>();
-        adapter = new TwitterRecycleAdapter(getActivity(), tweets);
-        layoutManager = new LinearLayoutManager(getActivity());
-        //layoutManager.setStackFromEnd(true);
-        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-            //    populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
-            }
-        };
-        twitterClient = new TwitterClient(getActivity());
-        pd = new ProgressDialog(getContext());
-        pd.setTitle("Loading...");
-        pd.setMessage("Please wait.");
-        pd.setCancelable(false);
+        if(savedInstanceState == null) {
+            tweets = new ArrayList<>();
+            adapter = new TwitterRecycleAdapter(getActivity(), tweets);
+            //layoutManager.setStackFromEnd(true);
+
+            twitterClient = new TwitterClient(getActivity());
+            pd = new ProgressDialog(getContext());
+            pd.setTitle("Loading...");
+            pd.setMessage("Please wait.");
+            pd.setCancelable(false);
+        }
     }
 
     protected void populateList(Long since_id, Long max_id, Long count, final boolean isRefresh) {
@@ -106,31 +100,42 @@ public class TweetsListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_tweets_list, container, false);
         ButterKnife.bind(this, v);
 
-        rvTweets.setAdapter(adapter);
-        rvTweets.setLayoutManager(layoutManager);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-              //  populateTimelineAsync(null,null,MAX_TWEET_COUNT, true);
-                populateList(null,null,MAX_TWEET_COUNT,true);
-            }
-        });
+
+        if(savedInstanceState == null) {
+
+            rvTweets.setAdapter(adapter);
+            layoutManager = new LinearLayoutManager(getActivity());
+            rvTweets.setLayoutManager(layoutManager);
+            scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    // Triggered only when new data needs to be appended to the list
+                    // Add whatever code is needed to append new items to the bottom of the list
+                    //    populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
+                }
+            };
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    // Your code to refresh the list here.
+                    // Make sure you call swipeContainer.setRefreshing(false)
+                    // once the network request has completed successfully.
+                    //  populateTimelineAsync(null,null,MAX_TWEET_COUNT, true);
+                    // populateList(null,null,MAX_TWEET_COUNT,true);
+                }
+            });
+
+            // Adds the scroll listener to RecyclerView
+            rvTweets.addOnScrollListener(scrollListener);
+            swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
 
 
-        // Adds the scroll listener to RecyclerView
-        rvTweets.addOnScrollListener(scrollListener);
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+            //getApplicationContext().deleteDatabase(SimpleTweetsDb.NAME);
 
-
-        //getApplicationContext().deleteDatabase(SimpleTweetsDb.NAME);
-
-        //init();
+            //init();
 
         /*
         boolean isFromShareIntent = getIntent().getBooleanExtra("fromReceiveIntent", false);
@@ -139,19 +144,21 @@ public class TweetsListFragment extends Fragment {
         }
         */
 
-        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Tweet tweet = tweets.get(position);
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                        intent.putExtra("user", Parcels.wrap(tweet.user));
-                        startActivity(intent);
+            ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+                    new ItemClickSupport.OnItemClickListener() {
+                        @Override
+                        public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                            Tweet tweet = tweets.get(position);
+                            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                            intent.putExtra("user", Parcels.wrap(tweet.user));
+                            startActivity(intent);
+                        }
                     }
-                }
-        );
+            );
 
-        init();
+            init();
+        }
+
 
         return v;
     }

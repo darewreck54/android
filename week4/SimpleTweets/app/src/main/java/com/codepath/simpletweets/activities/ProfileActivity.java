@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,9 +15,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
 import com.codepath.simpletweets.R;
 import com.codepath.simpletweets.TwitterApplication;
+import com.codepath.simpletweets.adapters.ProfileFragmentPagerAdapter;
+import com.codepath.simpletweets.adapters.TwitterFragmentPagerAdapter;
 import com.codepath.simpletweets.fragments.UserTimelineFragment;
 import com.codepath.simpletweets.models.User;
 import com.codepath.simpletweets.networks.TwitterClient;
@@ -57,6 +61,12 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.ivBackgroundImg)
     ImageView ivBackgroundImg;
 
+    @BindView(R.id.pstProfile)
+    PagerSlidingTabStrip tabsStrip;
+
+    @BindView(R.id.vpProfile)
+    ViewPager vpPager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,11 +101,17 @@ public class ProfileActivity extends AppCompatActivity {
 
         String screenName = (user == null) ? getIntent().getStringExtra("screen_name"):user.screenName;
         if(savedInstanceState == null) {
+            /*
             UserTimelineFragment fragmentTimeline = UserTimelineFragment.newInstance(screenName);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flContainer, fragmentTimeline);
             ft.commit();
+            */
+            ProfileFragmentPagerAdapter pageAdapter = new ProfileFragmentPagerAdapter(screenName, getSupportFragmentManager(),getApplicationContext());
+            vpPager.setAdapter(pageAdapter);
+            tabsStrip.setViewPager(vpPager);
         }
+
     }
 
     private void populateProfileHeader(User user) {

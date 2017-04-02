@@ -123,14 +123,14 @@ public class TwitterActivity extends AppCompatActivity implements ComposeTweetDi
 
         ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Tweet tweet = tweets.get(position);
-                        FragmentManager fm = getSupportFragmentManager();
-                        TweetDetailFragment fragment = TweetDetailFragment.newInstance(tweet);
-                        fragment.show(fm, "fragment_tweet_detail");
-                    }
-                }
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Tweet tweet = tweets.get(position);
+                FragmentManager fm = getSupportFragmentManager();
+                TweetDetailFragment fragment = TweetDetailFragment.newInstance(tweet);
+                fragment.show(fm, "fragment_tweet_detail");
+            }
+        }
         );
 
     }

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SimpleTweets</string>
+    <string name="login_label">Connect to Twitter</string>
+    <string name="title_activity_twitter">TwitterActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="status_placeholder">What\'s happening</string>
+    <string name="title_activity_mention">MentionActivity</string>
+    <string name="action_user">User</string>
+    <string name="action_compose">Compose</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+</resources>

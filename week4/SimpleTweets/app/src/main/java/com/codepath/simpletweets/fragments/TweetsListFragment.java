@@ -1,6 +1,7 @@
 package com.codepath.simpletweets.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -44,7 +45,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by darewreck_PC on 3/31/2017.
  */
 
-public class TweetsListFragment extends Fragment {
+public class TweetsListFragment extends Fragment  implements ComposeTweetDialogFragment.ComposeTweetDialogFragmentListener{
     @BindView(R.id.rvTweets)
     protected RecyclerView rvTweets;
 
@@ -111,7 +112,7 @@ public class TweetsListFragment extends Fragment {
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     // Triggered only when new data needs to be appended to the list
                     // Add whatever code is needed to append new items to the bottom of the list
-                    //    populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
+                    populateList(null,minTweetId-1,MAX_TWEET_COUNT,false);
                 }
             };
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -121,7 +122,7 @@ public class TweetsListFragment extends Fragment {
                     // Make sure you call swipeContainer.setRefreshing(false)
                     // once the network request has completed successfully.
                     //  populateTimelineAsync(null,null,MAX_TWEET_COUNT, true);
-                    // populateList(null,null,MAX_TWEET_COUNT,true);
+                    populateList(null,null,MAX_TWEET_COUNT,true);
                 }
             });
 
@@ -137,12 +138,6 @@ public class TweetsListFragment extends Fragment {
 
             //init();
 
-        /*
-        boolean isFromShareIntent = getIntent().getBooleanExtra("fromReceiveIntent", false);
-        if(isFromShareIntent) {
-            onComposeTweetClick();
-        }
-        */
 
             ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
                     new ItemClickSupport.OnItemClickListener() {
@@ -182,6 +177,15 @@ public class TweetsListFragment extends Fragment {
     public void refreshComplete() {
         swipeRefreshLayout.setRefreshing(false);
     }
+
+    public void onFinishCompose(Tweet tweet) {
+        //   int index = tweets.size();
+        //  index = (index == 0) ? 0: index-1;
+        tweets.add(0, tweet);
+        adapter.notifyItemChanged(0);
+        layoutManager.scrollToPosition(0);
+    }
+
 
 
 }

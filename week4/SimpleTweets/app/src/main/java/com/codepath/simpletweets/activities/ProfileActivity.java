@@ -156,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
     @OnClick(R.id.tvFollowingsCount)
     public void getFollowingsCount() {
         final Activity _activity = this;
-        twitterClient.getFavorites( user.id, new JsonHttpResponseHandler() {
+        twitterClient.getFriends( user.id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {

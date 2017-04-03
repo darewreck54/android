@@ -1,6 +1,8 @@
 package com.codepath.simpletweets.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +21,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.codepath.simpletweets.R;
 import com.codepath.simpletweets.TwitterApplication;
+import com.codepath.simpletweets.activities.ProfileActivity;
 import com.codepath.simpletweets.data.SimpleTweetsDb;
 import com.codepath.simpletweets.data.TweetDbFlowAdapter;
 import com.codepath.simpletweets.fragments.ComposeTweetDialogFragment;
@@ -26,6 +29,7 @@ import com.codepath.simpletweets.models.Tweet;
 import com.codepath.simpletweets.models.TwitterError;
 import com.codepath.simpletweets.networks.TwitterClient;
 import com.codepath.simpletweets.utils.ParseRelativeDate;
+import com.codepath.simpletweets.utils.PatternEditableBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
@@ -38,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -151,7 +156,16 @@ public class TwitterRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });
 
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                              //  Toast.makeText(MainActivity.this, "Clicked username: " + text,
+                                //        Toast.LENGTH_SHORT).show();
 
+                            }
+                        }).into(viewHolder.tvMessage);
         if (tweet.extendedEntity != null
                 && tweet.extendedEntity.media != null
                 && tweet.extendedEntity.media.videoInfo != null

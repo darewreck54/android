@@ -34,7 +34,7 @@ public class ProfileFragmentPagerAdapter extends FragmentPagerAdapter {
         } else if(position ==1) {
             fragment = new PhotosFragment();
         } else if(position == 2) {
-            fragment = new FavoritesFragment();
+            fragment = FavoritesFragment.newInstance(screenName);
         }
         return fragment;
     }

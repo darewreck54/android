@@ -134,7 +134,7 @@ public class TweetsListFragment extends Fragment  implements ComposeTweetDialogF
                     android.R.color.holo_red_light);
 
 
-            //getApplicationContext().deleteDatabase(SimpleTweetsDb.NAME);
+            getActivity().getApplicationContext().deleteDatabase(SimpleTweetsDb.NAME);
 
             //init();
 

@@ -66,6 +66,7 @@ public class UserListActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             users = new ArrayList<>();
             adapter = new UserRecycleAdapter(this, users);
+            final List<String> userIds = getIntent().getStringArrayListExtra("userIds");
 
             twitterClient = new TwitterClient(this);
             pd = new ProgressDialog(this.getApplicationContext());
@@ -80,7 +81,7 @@ public class UserListActivity extends AppCompatActivity {
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     // Triggered only when new data needs to be appended to the list
                     // Add whatever code is needed to append new items to the bottom of the list
-                    //    populateTimelineAsync(null,minTweetId-1,MAX_TWEET_COUNT,false);
+                    //populateList(userIds);
                 }
             };
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -90,7 +91,7 @@ public class UserListActivity extends AppCompatActivity {
                     // Make sure you call swipeContainer.setRefreshing(false)
                     // once the network request has completed successfully.
                     //  populateTimelineAsync(null,null,MAX_TWEET_COUNT, true);
-                    // populateList(null,null,MAX_TWEET_COUNT,true);
+                    //populateList(userIds);
                 }
             });
 
@@ -113,8 +114,7 @@ public class UserListActivity extends AppCompatActivity {
                         }
                     }
             );
-            List<String> userIds = getIntent().getStringArrayListExtra("userIds");
-            populateList(userIds);
+             populateList(userIds);
         }
     }
 
@@ -124,11 +124,13 @@ public class UserListActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 List<User> usersR = User.fromJSONArray(response);
                 addAll(usersR);
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }

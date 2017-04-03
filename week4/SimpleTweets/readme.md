@@ -57,6 +57,10 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
+- The challenge was deciding between the usage of a fragment and an activity.  I didn't really plan it well so taking the week3 project and 
+transforming it into to using fragments was a little difficult.  It resulted in a lot of rewrite.  Because I was figuring out the flow of the application
+as I went, I had to restructure the code so that there were less duplicate code and more reusable components.  Next time, it would probably save 
+more time to map out the whole applicaiton and what parts are shared and what part isn't.  Map components to fragments and to activities.
 
 ## Open-source libraries used
 
